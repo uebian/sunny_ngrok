@@ -63,15 +63,11 @@ public class MessageListeningThread extends Thread
 		catch (Exception e)
 		{
 			e.printStackTrace();
-
-			try
-			{
-				mh.handleMessage(new JSONObject().put("Type", "Error").put("Payload", new JSONObject().put("info", e.toString())));
-			}
-			catch (Exception err)
-			{}
-			mh.close();
+			mh.getTunnel().unlinked(e.toString(),socket);
 		}
-		
+	}
+	public MessageHandler getMessageHandler()
+	{
+		return mh;
 	}
 }

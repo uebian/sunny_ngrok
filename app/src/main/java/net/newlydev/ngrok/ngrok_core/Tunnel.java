@@ -1,12 +1,9 @@
 package net.newlydev.ngrok.ngrok_core;
-import java.io.*;
-import java.nio.*;
-import java.security.*;
+import java.net.*;
 import java.security.cert.*;
 import javax.net.ssl.*;
-import org.json.*;
 import net.newlydev.ngrok.*;
-import org.apache.http.impl.execchain.*;
+import org.json.*;
 
 public class Tunnel
 {
@@ -29,10 +26,10 @@ public class Tunnel
 	private boolean closeforever=false;
 	private MessageListeningThread mlt;
 
-    public Tunnel(String serverAddress, int serverPort, String localIP,int localPort, String proto, String subDomain, String hostname,
+    public Tunnel(String serverAddress, int serverPort, String localIP, int localPort, String proto, String subDomain, String hostname,
 				  int remotePort, String httpAuth, MainService service)
 	{
-		this.localIP=localIP;
+		this.localIP = localIP;
 		this.serverAddress = serverAddress;
 		this.serverPort = serverPort;
         this.localport = localPort;
@@ -42,67 +39,38 @@ public class Tunnel
         this.remotePort = remotePort;
         this.httpAuth = httpAuth;
 		this.service = service;
-		new Thread(){
-			@Override
-			public void run()
-			{
-				while (!closeforever)
-				{
-					if (isopen && status.startsWith("err:"))
-					{
 
-						try
-						{
-							close();
-							isopen = true;
-							connect();
-						}
-						catch (Exception e)
-						{
-							unlinked(e.toString());
-						}
-
-					}
-					try
-					{
-						Thread.sleep(3000);
-					}
-					catch (InterruptedException e)
-					{}
-				}
-			}
-		}.start();
     }
 	public long getUploadData()
 	{
 		return uploaddata;
 	}
-	
+
 	public long getDownloadData()
 	{
 		return downloaddata;
 	}
-	
+
 	public void setSpeed(long speed)
 	{
-		this.speed=speed;
+		this.speed = speed;
 		service.notice_tunnel_update();
 	}
-	
+
 	public long getSpeed()
 	{
 		return speed;
 	}
-	
+
 	public void putUploadData(long b)
 	{
-		uploaddata=uploaddata+b;
+		uploaddata = uploaddata + b;
 		service.notice_tunnel_update();
 	}
-	
+
 	public void putDownloadData(long b)
 	{
-		downloaddata=downloaddata+b;
+		downloaddata = downloaddata + b;
 		service.notice_tunnel_update();
 	}
 	public String getLocalIP()
@@ -186,31 +154,86 @@ public class Tunnel
 	{
 		return serverPort;
 	}
-	public void unlinked(String reason)
+	private void realunlinked(String reason)
 	{
-		speed=-1;
+		speed = -1;
 		if (isOpen())
 		{
+			close();
+			isopen = true;
 			mlt = null;
 			status = "err:" + reason;
+			service.notice_tunnel_update();
+			try
+			{
+				Thread.sleep(3000);
+			}
+			catch (InterruptedException e)
+			{}
+			new Thread(){
+				@Override
+				public void run()
+				{
+					try
+					{
+						connect();
+					}
+					catch (Exception e)
+					{
+						unlinked(e.toString(), socket);
+					}
+				}
+			}.start();
 			//service.notice_tunnel_update();
+		}
+		else
+		{
+			close();
 		}
 		service.notice_tunnel_update();
 	}
+	public void unlinked(String reason, Socket errsocket)
+	{
+		if (socket == null || errsocket == null)
+		{
+			realunlinked(reason);
+		}
+		else if (socket.equals(errsocket))
+		{
+			realunlinked(reason);
+		}
+
+	}
 	public void open()
 	{
-		isopen = true;
+		if (!isopen)
+		{
+			isopen = true;
+			new Thread(){
+				@Override
+				public void run()
+				{
+					try
+					{
+						connect();
+					}
+					catch (Exception e)
+					{
+						unlinked(e.toString(), socket);
+					}
+				}
+			}.start();
+		}
 	}
 	public void close()
 	{
-		try
+		if (mlt != null)
 		{
-			socket.close();
+			mlt.getMessageHandler().close();
 		}
-		catch (Exception e)
-		{}
+		
 		isopen = false;
-
+		speed = -1;
 		if (mlt != null)
 		{
 			mlt.closeforever = true;
@@ -223,12 +246,10 @@ public class Tunnel
 	}
 	public void closeforever()
 	{
-		try
+		if (mlt != null)
 		{
-			socket.close();
+			mlt.getMessageHandler().close();
 		}
-		catch (Exception e)
-		{}
 		isopen = false;
 		closeforever = true;
 		isopen = false;
@@ -242,50 +263,52 @@ public class Tunnel
 	}
 	private void connect() throws Exception
 	{
-		status = "info:(正在连接)";
-		service.notice_tunnel_update();
-        TrustManager[] trustAllCerts = new TrustManager[]{
-			new X509TrustManager() {
-				public X509Certificate[] getAcceptedIssuers()
-				{
-					return null;
+		if (isopen && socket==null && status.startsWith("err:"))
+		{
+			status = "info:(正在连接)";
+			service.notice_tunnel_update();
+			TrustManager[] trustAllCerts = new TrustManager[]{
+				new X509TrustManager() {
+					public X509Certificate[] getAcceptedIssuers()
+					{
+						return null;
+					}
+
+					public void checkClientTrusted(X509Certificate[] certs, String authType)
+					{
+					}
+
+					public void checkServerTrusted(X509Certificate[] certs, String authType)
+					{
+					}
 				}
+			};
+			SSLContext sslCxt = SSLContext.getInstance("TLSv1.2");
+			sslCxt.init(null, trustAllCerts, null);
+			socket = (SSLSocket) sslCxt.getSocketFactory().createSocket(serverAddress, serverPort);
+			socket.startHandshake();
+			JSONObject request = new JSONObject();
+			request.put("Type", "Auth");
+			JSONObject payload = new JSONObject();
+			payload.put("Version", "2");
+			payload.put("MmVersion", "1.7");
+			payload.put("User", "");
+			payload.put("Password", "");
+			payload.put("OS", "darwin");
+			payload.put("Arch", "amd64");
+			payload.put("ClientId", "");
+			request.put("Payload", payload);
+			Function.sendMessage(socket, request.toString());
+			MessageHandler mh=new MessageHandler(this);
+			//log.debug("Waiting to read message");
+			mlt = new MessageListeningThread(mh, socket);
+			mlt.start();
+			//MessageHandler.handleMessage(json,l);
+			//log.debug("Read message: {}", json.toJSONString());
+			//json.toString();
 
-				public void checkClientTrusted(X509Certificate[] certs, String authType)
-				{
-				}
-
-				public void checkServerTrusted(X509Certificate[] certs, String authType)
-				{
-				}
-			}
-        };
-        SSLContext sslCxt = SSLContext.getInstance("TLSv1.2");
-        sslCxt.init(null, trustAllCerts, null);
-        socket = (SSLSocket) sslCxt.getSocketFactory().createSocket(serverAddress, serverPort);
-		socket.startHandshake();
-		JSONObject request = new JSONObject();
-		request.put("Type", "Auth");
-		JSONObject payload = new JSONObject();
-		payload.put("Version", "2");
-		payload.put("MmVersion", "1.7");
-		payload.put("User", "");
-		payload.put("Password", "");
-		payload.put("OS", "darwin");
-		payload.put("Arch", "amd64");
-		payload.put("ClientId", "");
-		request.put("Payload", payload);
-		Function.sendMessage(socket, request.toString());
-		MessageHandler mh=new MessageHandler(this);
-		//log.debug("Waiting to read message");
-		mlt = new MessageListeningThread(mh, socket);
-		mlt.start();
-		//MessageHandler.handleMessage(json,l);
-		//log.debug("Read message: {}", json.toJSONString());
-		//json.toString();
-
-		//log.error("Occurred some exception", e);
-
+			//log.error("Occurred some exception", e);
+		}
 		//private final SocketFactory socketFactory;
     }
 	public void linked(String remoteUrl)

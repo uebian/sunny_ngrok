@@ -1,14 +1,19 @@
 package net.newlydev.ngrok.activities;
+import android.app.*;
+import android.graphics.*;
 import android.os.*;
 import android.support.v7.app.*;
-import android.support.v7.widget.Toolbar;
+import android.support.v7.widget.*;
+import android.view.*;
+import android.view.View.*;
+import android.widget.*;
+import com.google.android.gms.ads.*;
 import net.newlydev.ngrok.*;
 import net.newlydev.ngrok.ngrok_core.*;
-import android.widget.*;
-import android.graphics.*;
-import android.view.View.*;
-import android.view.*;
-import android.app.ProgressDialog;
+
+import android.support.v7.app.AlertDialog;
+import android.support.v7.widget.Toolbar;
+import net.newlydev.ngrok.R;
 
 public class TunneInfoActivity extends AppCompatActivity
 {
@@ -22,6 +27,10 @@ public class TunneInfoActivity extends AppCompatActivity
 		// TODO: Implement this method
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_tunneinfo);
+		AdView adview=(AdView) findViewById(R.id.adView);
+		//AdRequest adRequest = new AdRequest.Builder().addTestDevice("27E31343F422BD0D601A6F9D3D438A95").build();
+		AdRequest adRequest=new AdRequest.Builder().build();
+        adview.loadAd(adRequest);
 		pd=new ProgressDialog(this);
 		pd.setMessage("请稍候...");
 		pd.setCancelable(false);
@@ -64,9 +73,9 @@ public class TunneInfoActivity extends AppCompatActivity
 		tv_downloaddata=(TextView) findViewById(R.id.tv_downloaddata);
 		tv_uploaddata=(TextView) findViewById(R.id.tv_uploaddata);
 		tv_speed=(TextView) findViewById(R.id.tv_speed);
-		tunnel = TunneRunningActivity.service.tunns.get(getIntent().getExtras().get("tuncount"));
+		tunnel = ViewTunneActivity.service.tunns.get(getIntent().getExtras().get("tuncount"));
 		setTitle("隧道详细:" + tunnel.getLocalIP() + ":" + tunnel.getLocalPort());
-		TunneRunningActivity.setTunneInfoActivity(this);
+		ViewTunneActivity.setTunneInfoActivity(this);
 		update();
 	}
 	public void update()
@@ -111,7 +120,7 @@ public class TunneInfoActivity extends AppCompatActivity
 	{
 		// TODO: Implement this method
 		super.onDestroy();
-		TunneRunningActivity.setTunneInfoActivity(null);
+		ViewTunneActivity.setTunneInfoActivity(null);
 	}
 
 }

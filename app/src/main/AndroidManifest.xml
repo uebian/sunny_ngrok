@@ -21,7 +21,7 @@
             </intent-filter>
         </activity>
 		<activity
-            android:name=".activities.TunneRunningActivity"
+            android:name=".activities.ViewTunneActivity"
             android:label="@string/app_name" 
 			android:launchMode="singleTask"/>
 		<activity

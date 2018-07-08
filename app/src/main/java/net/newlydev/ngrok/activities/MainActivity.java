@@ -41,7 +41,7 @@ public class MainActivity extends AppCompatActivity
 		if(Utils.isMainServiceRunning(this))
 		{
 			finish();
-			startActivity(new Intent(this,TunneRunningActivity.class));
+			startActivity(new Intent(this,ViewTunneActivity.class));
 		}
 		et_clientid = (EditText) findViewById(R.id.et_clientid);
 		btn_start = (Button) findViewById(R.id.btn_start);
@@ -139,7 +139,7 @@ public class MainActivity extends AppCompatActivity
 						i.putExtra("authdata", data);
 						startService(i);
 						finish();
-						startActivity(new Intent(MainActivity.this, TunneRunningActivity.class));
+						startActivity(new Intent(MainActivity.this, ViewTunneActivity.class));
 					}
 					else
 					{
@@ -164,7 +164,7 @@ public class MainActivity extends AppCompatActivity
 										i.putExtra("authdata", okdata);
 										startService(i);
 										finish();
-										startActivity(new Intent(MainActivity.this, TunneRunningActivity.class));
+										startActivity(new Intent(MainActivity.this, ViewTunneActivity.class));
 									}
 									// TODO: Implement this method
 								}

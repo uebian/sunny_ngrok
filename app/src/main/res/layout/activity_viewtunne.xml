@@ -27,6 +27,14 @@
 		android:layout_width="match_parent"
 		android:id="@+id/lv_checktunne"
 		android:layout_weight="1.0"/>
+	<com.google.android.gms.ads.AdView
+		xmlns:ads="http://schemas.android.com/apk/res-auto"
+		android:id="@+id/adView"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		ads:adSize="BANNER"
+		ads:adUnitId="ca-app-pub-4267459436057308/1136230739">
 
+	</com.google.android.gms.ads.AdView>
 </LinearLayout>
 

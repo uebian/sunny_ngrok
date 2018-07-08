@@ -7,14 +7,16 @@ import android.support.v7.widget.*;
 import android.view.*;
 import android.widget.*;
 import android.widget.AdapterView.*;
+import com.google.android.gms.ads.*;
 import java.util.*;
 import net.newlydev.ngrok.*;
 import net.newlydev.ngrok.ngrok_core.*;
 import org.json.*;
 
 import android.support.v7.widget.Toolbar;
+import net.newlydev.ngrok.R;
 
-public class TunneRunningActivity extends AppCompatActivity
+public class ViewTunneActivity extends AppCompatActivity
 {
 	JSONArray data;
 	JSONObject info;
@@ -24,7 +26,7 @@ public class TunneRunningActivity extends AppCompatActivity
 	public static TunneInfoActivity tunneInfoActivity;
 	public static void setTunneInfoActivity(TunneInfoActivity tunneInfoActivity)
 	{
-		TunneRunningActivity.tunneInfoActivity = tunneInfoActivity;
+		ViewTunneActivity.tunneInfoActivity = tunneInfoActivity;
 	}
 	ArrayList<String> tunns=new ArrayList<String>();
 	ArrayAdapter<String> adapter;
@@ -33,7 +35,11 @@ public class TunneRunningActivity extends AppCompatActivity
 	{
 		// TODO: Implement this method
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_managetunne);
+		setContentView(R.layout.activity_viewtunne);
+		AdView adview=(AdView) findViewById(R.id.adView);
+		//AdRequest adRequest = new AdRequest.Builder().addTestDevice("27E31343F422BD0D601A6F9D3D438A95").build();
+		AdRequest adRequest=new AdRequest.Builder().build();
+        adview.loadAd(adRequest);
 		setSupportActionBar((Toolbar)findViewById(R.id.toolbar_normal));
 		if (!Utils.isMainServiceRunning(this))
 		{
@@ -50,7 +56,7 @@ public class TunneRunningActivity extends AppCompatActivity
 					@Override
 					public void onItemClick(AdapterView<?> p1, View p2, int p3, long p4)
 					{
-						Intent i=new Intent(TunneRunningActivity.this, TunneInfoActivity.class);
+						Intent i=new Intent(ViewTunneActivity.this, TunneInfoActivity.class);
 						i.putExtra("tuncount", p3);
 						startActivity(i);
 						// TODO: Implement this method
@@ -68,7 +74,7 @@ public class TunneRunningActivity extends AppCompatActivity
 		{
 
 			final MainService.mBinder service = (MainService.mBinder) binder;
-			TunneRunningActivity.this.service = service.service;
+			ViewTunneActivity.this.service = service.service;
 			service.service.setUpdateListener(new updateListener(){
 					@Override
 					public void onUpdate()
@@ -136,7 +142,7 @@ public class TunneRunningActivity extends AppCompatActivity
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu)
 	{
-		menu.add("结束所有隧道");
+		menu.add("终止客户端");
 		// TODO: Implement this method
 		return super.onCreateOptionsMenu(menu);
 	}
@@ -146,9 +152,9 @@ public class TunneRunningActivity extends AppCompatActivity
 	{
 		switch (item.getTitle().toString())
 		{
-			case "结束所有隧道":
+			case "终止客户端":
 				unbindService(conn);
-				stopService(new Intent(TunneRunningActivity.this, MainService.class));
+				stopService(new Intent(ViewTunneActivity.this, MainService.class));
 				finish();
 				break;
 		}

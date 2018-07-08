@@ -11,10 +11,10 @@ import android.app.Notification.*;
 public class MainService extends Service
 {
 	public ArrayList<Tunnel> tunns=new ArrayList<Tunnel>();
-	private TunneRunningActivity.updateListener listener;
+	private ViewTunneActivity.updateListener listener;
 
 	private Notification.Builder builder;
-	public void setUpdateListener(TunneRunningActivity.updateListener listener)
+	public void setUpdateListener(ViewTunneActivity.updateListener listener)
 	{
 		this.listener = listener;
 		// TODO: Implement this method
@@ -24,12 +24,12 @@ public class MainService extends Service
 	{
 		// TODO: Implement this method
 		super.onCreate();
-		builder= new Notification.Builder(this);
+		builder = new Notification.Builder(this);
 		builder.setContentTitle("Ngrok客户端服务运行中");
 		builder.setContentText("点击管理");
 		builder.setSmallIcon(R.drawable.ic_launcher);
 		builder.setOngoing(true);
-		builder.setContentIntent(PendingIntent.getActivity(this,0,new Intent(this,TunneRunningActivity.class),0));
+		builder.setContentIntent(PendingIntent.getActivity(this, 0, new Intent(this, ViewTunneActivity.class), 0));
 	}
 
 	@Override
@@ -43,46 +43,32 @@ public class MainService extends Service
 			@Override
 			public void run()
 			{
-				for(Tunnel tunnel:tunns)
+				for (Tunnel tunnel:tunns)
 				{
 					tunnel.closeforever();
 				}
 			}
 		}.start();
-		
+
 	}
 
 	@Override
 	public int onStartCommand(Intent intent, int flags, int startId)
 	{
-		((NotificationManager)getSystemService(Context.NOTIFICATION_SERVICE)).notify(0,builder.build());
-		
+		((NotificationManager)getSystemService(Context.NOTIFICATION_SERVICE)).notify(0, builder.build());
+
 		ArrayList<String> authdatastr=intent.getExtras().getStringArrayList("authdata");
 		for (int i=0;i < authdatastr.size();i++)
 		{
 			try
 			{
-				final JSONObject authData=new JSONObject(authdatastr.get(i));
-				new Thread(){
-					@Override
-					public void run()
-					{
-						try
-						{
-							
-							JSONObject real_data=(JSONObject) authData.getJSONArray("data").get(0);
-							String tcporhttp=real_data.getJSONObject("proto").keys().next();
-							Tunnel tunnel = new Tunnel(authData.getString("server").split(":")[0], Integer.parseInt(authData.getString("server").split(":")[1]), 
-													   real_data.getJSONObject("proto").getString(tcporhttp).split(":")[0],Integer.parseInt(real_data.getJSONObject("proto").getString(tcporhttp).split(":")[1]), tcporhttp, real_data.getString("subdomain"), real_data.getString("hostname"), authData.getJSONArray("data").getJSONObject(0).getInt("remoteport"), real_data.getString("httpauth"), MainService.this);
-							tunns.add(tunnel);
-							tunnel.open();
-						}
-						catch (Exception e)
-						{
-							e.printStackTrace();
-						}
-					}
-				}.start();
+				JSONObject authData=new JSONObject(authdatastr.get(i));
+				JSONObject real_data=(JSONObject) authData.getJSONArray("data").get(0);
+				String tcporhttp=real_data.getJSONObject("proto").keys().next();
+				Tunnel tunnel = new Tunnel(authData.getString("server").split(":")[0], Integer.parseInt(authData.getString("server").split(":")[1]), 
+										   real_data.getJSONObject("proto").getString(tcporhttp).split(":")[0], Integer.parseInt(real_data.getJSONObject("proto").getString(tcporhttp).split(":")[1]), tcporhttp, real_data.getString("subdomain"), real_data.getString("hostname"), authData.getJSONArray("data").getJSONObject(0).getInt("remoteport"), real_data.getString("httpauth"), MainService.this);
+				tunns.add(tunnel);
+				tunnel.open();
 			}
 			catch (JSONException e)
 			{}

@@ -26,6 +26,7 @@ public class MessageHandler
 	private String localIP;
 	private SSLSocket socket;
 	private long lastPing;
+	private boolean mainlink;
 	public MessageHandler(Tunnel tunnel)
 	{
 		this.tunnel = tunnel;
@@ -34,11 +35,13 @@ public class MessageHandler
 		this.serverPort = tunnel.getServerPort();
 		this.localPort = tunnel.getLocalPort();
 		this.localIP = tunnel.getLocalIP();
+		mainlink = true;
 	}
-	public MessageHandler(String serverAddress, int serverPort, String clientid, int localPort, String localIP,Tunnel tunnel) throws NoSuchAlgorithmException, KeyManagementException, IOException
+	public MessageHandler(String serverAddress, int serverPort, String clientid, int localPort, String localIP, Tunnel tunnel) throws NoSuchAlgorithmException, KeyManagementException, IOException
 	{
 		this.clientid = clientid;
-		this.tunnel=tunnel;
+		this.tunnel = tunnel;
+		mainlink = false;
 		TrustManager[] trustAllCerts = new TrustManager[]{
 			new X509TrustManager() {
 				public X509Certificate[] getAcceptedIssuers()
@@ -68,11 +71,15 @@ public class MessageHandler
 	{
 		try
 		{
-				socket.close();
+			socket.close();
 		}
 		catch (Exception e)
 		{}
 		// TODO: Implement this method
+	}
+	public Tunnel getTunnel()
+	{
+		return tunnel;
 	}
 	public SSLSocket getSocket()
 	{
@@ -81,18 +88,15 @@ public class MessageHandler
 	public void sendPing() throws IOException
 	{
 		Function.sendMessage(socket, "{\"Type\":\"Ping\",\"Payload\":{}}");
-		lastPing=System.currentTimeMillis();
+		lastPing = System.currentTimeMillis();
 		// TODO: Implement this method
 	}
-    public boolean handleMessage(JSONObject json) throws Exception
+    public boolean handleMessage(JSONObject json) throws JSONException, IOException, NoSuchAlgorithmException, KeyManagementException, InterruptedException
 	{
         String type = json.getString("Type");
         JSONObject payload = json.getJSONObject("Payload");
         switch (type)
 		{
-			case "Error":
-				tunnel.unlinked(payload.getString("info"));
-				break;
             case "AuthResp": 
 				clientid = payload.getString("ClientId");
 				sendPing();
@@ -100,48 +104,73 @@ public class MessageHandler
 				if (error.equals(""))
 				{
 					Function.sendReqTunnel(tunnel.getSocket(), tunnel);
-					//new HeartThread(this).start();
 				}
 				else
 				{
 				}
 				break;
 			case "Pong":
-				tunnel.setSpeed((System.currentTimeMillis()- lastPing)/2);
-				Thread.sleep(3000);
-				sendPing();
+				if (!socket.equals(tunnel.getSocket()))
+				{
+					socket.close();
+				}
+				else
+				{
+					tunnel.setSpeed((System.currentTimeMillis() - lastPing) / 2);
+					Thread.sleep(3000);
+					sendPing();
+				}
 				break;
 			case "ReqProxy":
 				//注册代理需要新的线程和连接
-				MessageHandler messagehandler = new MessageHandler(serverAddress, serverPort, clientid, localPort, localIP,tunnel);
+				MessageHandler messagehandler = new MessageHandler(serverAddress, serverPort, clientid, localPort, localIP, tunnel);
 				new MessageListeningThread(messagehandler, messagehandler.getSocket()).start();
 				messagehandler.sendRegProxy();
 				break;
 			case "NewTunnel": 
 				//String error = payload.getString("Error");
 				String reqId = payload.getString("ReqId");
-				
+
 				String errorn = payload.getString("Error");
-				
-				if (!errorn.equals("")) {
-					tunnel.unlinked(errorn);
-				 }else{
-					 String url = payload.getString("Url");
-					 tunnel.linked(url);
-				 }
+
+				if (!errorn.equals(""))
+				{
+					tunnel.unlinked(errorn, socket);
+				}
+				else
+				{
+					String url = payload.getString("Url");
+					tunnel.linked(url);
+				}
 				break;
 
 			case "StartProxy": 
 				//String url = payload.getString("Url");
-				Socket locals = new Socket(localIP, localPort);
-				//Thread.sleep(10);
-				new SocketDownThread(socket, locals,tunnel).start();
-				new SocketUpThread(locals, socket,tunnel).start();
+				try
+				{
+					Socket locals = new Socket(localIP, localPort);
+
+					//Thread.sleep(10);
+					new SocketDownThread(socket, locals, tunnel).start();
+					new SocketUpThread(locals, socket, tunnel).start();
+				}
+				catch (Exception e)
+				{
+					e.printStackTrace();
+					try
+					{
+						socket.close();
+					}
+					catch (Exception err)
+					{
+
+					}
+				}
 				return true;
 		}
 		return false;
 	}
-	
+
 	public void sendRegProxy() throws IOException
 	{
 		Function.sendMessage(socket, "{\"Type\":\"RegProxy\",\"Payload\":{\"ClientId\":\"" + clientid + "\"}}");
