@@ -62,9 +62,9 @@ public class TunneInfoActivity extends AppCompatActivity
 				@Override
 				public void onClick(View p1)
 				{
-					if(tunnel.getStatus().startsWith("err:"))
+					if(tunnel.getStatus()==2)
 					{
-						String error=tunnel.getStatus().substring(4);
+						String error=tunnel.geterrmsg();
 						new AlertDialog.Builder(TunneInfoActivity.this).setTitle("错误详情").setMessage(error).setPositiveButton("确定",null).show();
 					}
 					// TODO: Implement this method
@@ -89,12 +89,12 @@ public class TunneInfoActivity extends AppCompatActivity
 		if (tunnel.isOpen())
 		{
 			pd.dismiss();
-			if (tunnel.getStatus().startsWith("succ:"))
+			if (tunnel.getStatus()==0)
 			{
 				tv_status.setTextColor(Color.GREEN);
 				tv_status.setText("连接成功");
 			}
-			else if (tunnel.getStatus().startsWith("err:"))
+			else if (tunnel.getStatus()==2)
 			{
 				tv_status.setTextColor(Color.RED);
 				tv_status.setText("出现错误，将在3秒后重连(点击此处查看错误详情)");

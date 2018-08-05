@@ -43,6 +43,7 @@ public class ViewTunneActivity extends AppCompatActivity
 		setSupportActionBar((Toolbar)findViewById(R.id.toolbar_normal));
 		if (!Utils.isMainServiceRunning(this))
 		{
+			startActivity(new Intent(this,MainActivity.class));
 			finish();
 		}
 		else
@@ -90,17 +91,20 @@ public class ViewTunneActivity extends AppCompatActivity
 									tunns.clear();
 									for (final Tunnel tunnel:service.service.tunns)
 									{
-										if (tunnel.getStatus().startsWith("info:"))
+										switch(tunnel.getStatus())
 										{
-											tunns.add(tunnel.getLocalIP() + ":" + tunnel.getLocalPort() + tunnel.getStatus().substring(5));
-										}
-										else if (tunnel.getStatus().startsWith("err:"))
-										{
-											tunns.add(tunnel.getLocalIP() + ":" + tunnel.getLocalPort() + "(错误，准备重连)");
-										}
-										else if (tunnel.getStatus().startsWith("succ:"))
-										{
-											tunns.add(tunnel.getStatus().substring(5) + "->" + tunnel.getLocalIP() + ":" + tunnel.getLocalPort());
+											case 0:
+												tunns.add(tunnel.getRemoteUrl() + "->" + tunnel.getLocalIP() + ":" + tunnel.getLocalPort());
+												break;
+											case 1:
+												tunns.add(tunnel.getLocalIP() + ":" + tunnel.getLocalPort() + "(连接中)");
+												break;
+											case 2:
+												tunns.add(tunnel.getLocalIP() + ":" + tunnel.getLocalPort() + "(错误，准备重连)");
+												break;
+											case 3:
+												tunns.add(tunnel.getLocalIP() + ":" + tunnel.getLocalPort() + "(已关闭)");
+												break;
 										}
 									}
 									adapter.notifyDataSetChanged();
@@ -142,6 +146,9 @@ public class ViewTunneActivity extends AppCompatActivity
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu)
 	{
+		menu.add("日志");
+		menu.add("设置");
+		menu.add("关于");
 		menu.add("终止客户端");
 		// TODO: Implement this method
 		return super.onCreateOptionsMenu(menu);
@@ -152,10 +159,28 @@ public class ViewTunneActivity extends AppCompatActivity
 	{
 		switch (item.getTitle().toString())
 		{
+			case "日志":
+				startActivity(new Intent(this,LogActivity.class));
+				break;
+			case "设置":
+				startActivity(new Intent(this,SettingActivity.class));
+				break;
+			case "关于":
+				startActivity(new Intent(this,AboutActivity.class));
+				break;
 			case "终止客户端":
-				unbindService(conn);
-				stopService(new Intent(ViewTunneActivity.this, MainService.class));
-				finish();
+				new AlertDialog.Builder(this).setTitle("警告").setMessage("这将会关闭所有的ngrok隧道，您确定继续吗？").setCancelable(false).setPositiveButton("确定", new DialogInterface.OnClickListener(){
+
+						@Override
+						public void onClick(DialogInterface p1, int p2)
+						{
+							unbindService(conn);
+							stopService(new Intent(ViewTunneActivity.this, MainService.class));
+							finish();
+							// TODO: Implement this method
+						}
+					}).setNegativeButton("取消",null).show();
+				
 				break;
 		}
 		// TODO: Implement this method

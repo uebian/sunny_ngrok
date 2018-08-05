@@ -7,6 +7,7 @@ import org.json.*;
 
 public class Tunnel
 {
+	private String sunnyid;
 	private SSLSocket socket;
     private int localport;
 	private String localIP;
@@ -17,17 +18,19 @@ public class Tunnel
     private String httpAuth;
 	private String serverAddress;
 	private int serverPort;
-	private boolean isopen=false;
-	private String status="err:等待中...";
+	//private boolean isopen=false;
+	//private String status="err:等待中...";
+	private int status=3;//0 ok,1 linking,2 err,3 close
+	String errmsg;
+	String remoteURL;
 	private MainService service;
 	private long uploaddata=0;
 	private long downloaddata=0;
 	private long speed=-1;
-	private boolean closeforever=false;
 	private MessageListeningThread mlt;
 
     public Tunnel(String serverAddress, int serverPort, String localIP, int localPort, String proto, String subDomain, String hostname,
-				  int remotePort, String httpAuth, MainService service)
+				  int remotePort, String httpAuth, MainService service, String sunnyid)
 	{
 		this.localIP = localIP;
 		this.serverAddress = serverAddress;
@@ -39,11 +42,22 @@ public class Tunnel
         this.remotePort = remotePort;
         this.httpAuth = httpAuth;
 		this.service = service;
-
+		this.sunnyid = sunnyid;
     }
 	public long getUploadData()
 	{
 		return uploaddata;
+	}
+	public ControlConnectMessageHandler getControlConnectMessageHandler()
+	{
+		if (mlt != null)
+		{
+			return (ControlConnectMessageHandler)mlt.getMessageHandler();
+		}
+		else
+		{
+			return null;
+		}
 	}
 
 	public long getDownloadData()
@@ -81,7 +95,14 @@ public class Tunnel
 
 	public boolean isOpen()
 	{
-		return isopen;
+		if (status == 3)
+		{
+			return false;
+		}
+		else
+		{
+			return true;
+		}
 	}
     public int getLocalPort()
 	{
@@ -154,15 +175,26 @@ public class Tunnel
 	{
 		return serverPort;
 	}
+	public String getSunnyid()
+	{
+		return sunnyid;
+	}
+	public String geterrmsg()
+	{
+		return errmsg;
+	}
 	private void realunlinked(String reason)
+	{
+
+	}
+	public void unlinked(String reason)
 	{
 		speed = -1;
 		if (isOpen())
 		{
 			close();
-			isopen = true;
-			mlt = null;
-			status = "err:" + reason;
+			status = 2;
+			errmsg = reason;
 			service.notice_tunnel_update();
 			try
 			{
@@ -170,102 +202,53 @@ public class Tunnel
 			}
 			catch (InterruptedException e)
 			{}
-			new Thread(){
-				@Override
-				public void run()
-				{
-					try
-					{
-						connect();
-					}
-					catch (Exception e)
-					{
-						unlinked(e.toString(), socket);
-					}
-				}
-			}.start();
+			if (isOpen())
+			{
+				open();
+			}
 			//service.notice_tunnel_update();
 		}
-		else
-		{
-			close();
-		}
 		service.notice_tunnel_update();
-	}
-	public void unlinked(String reason, Socket errsocket)
-	{
-		if (socket == null || errsocket == null)
-		{
-			realunlinked(reason);
-		}
-		else if (socket.equals(errsocket))
-		{
-			realunlinked(reason);
-		}
-
 	}
 	public void open()
 	{
-		if (!isopen)
-		{
-			isopen = true;
-			new Thread(){
-				@Override
-				public void run()
+		LogManager.addLogs(new LogManager.Log("I", sunnyid, "隧道启动"));
+		new Thread(){
+			@Override
+			public void run()
+			{
+				try
 				{
-					try
-					{
-						connect();
-					}
-					catch (Exception e)
-					{
-						unlinked(e.toString(), socket);
-					}
+					connect();
 				}
-			}.start();
-		}
+				catch (Exception e)
+				{
+					unlinked(e.toString());
+				}
+			}
+		}.start();
 	}
 	public void close()
 	{
-		if (mlt != null)
-		{
-			mlt.getMessageHandler().close();
-		}
-		
-		isopen = false;
+		LogManager.addLogs(new LogManager.Log("I", sunnyid, "隧道关闭"));
 		speed = -1;
 		if (mlt != null)
 		{
-			mlt.closeforever = true;
+			((ControlConnectMessageHandler)mlt.getMessageHandler()).close();
 		}
 		mlt = null;
 		socket = null;
 		System.gc();
-		status = "info:(已关闭)";
+		//isopen = false;
+		status = 3;
 		service.notice_tunnel_update();
 	}
-	public void closeforever()
-	{
-		if (mlt != null)
-		{
-			mlt.getMessageHandler().close();
-		}
-		isopen = false;
-		closeforever = true;
-		isopen = false;
-		if (mlt != null)
-		{
-			mlt.closeforever = true;
-		}
-		mlt = null;
-		socket = null;
-		System.gc();
-	}
+
 	private void connect() throws Exception
 	{
-		if (isopen && socket==null && status.startsWith("err:"))
+		if (mlt == null)
 		{
-			status = "info:(正在连接)";
+			status = 1;
 			service.notice_tunnel_update();
 			TrustManager[] trustAllCerts = new TrustManager[]{
 				new X509TrustManager() {
@@ -299,25 +282,24 @@ public class Tunnel
 			payload.put("ClientId", "");
 			request.put("Payload", payload);
 			Function.sendMessage(socket, request.toString());
-			MessageHandler mh=new MessageHandler(this);
+			ControlConnectMessageHandler mh=new ControlConnectMessageHandler(this);
 			//log.debug("Waiting to read message");
 			mlt = new MessageListeningThread(mh, socket);
 			mlt.start();
-			//MessageHandler.handleMessage(json,l);
-			//log.debug("Read message: {}", json.toJSONString());
-			//json.toString();
-
-			//log.error("Occurred some exception", e);
 		}
-		//private final SocketFactory socketFactory;
     }
 	public void linked(String remoteUrl)
 	{
-		this.status = "succ:" + remoteUrl;
+		this.remoteURL = remoteUrl;
+		status = 0;
 		service.notice_tunnel_update();
 	}
-	public String getStatus()
+	public int getStatus()
 	{
 		return status;
+	}
+	public String getRemoteUrl()
+	{
+		return remoteURL;
 	}
 }

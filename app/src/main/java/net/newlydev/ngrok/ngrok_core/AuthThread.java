@@ -33,6 +33,7 @@ public class AuthThread extends Thread
 			data.putInt("progress",i+1);
 			msg.setData(data);
 			callback.sendMessage(msg);
+			LogManager.addLogs(new LogManager.Log("I",clientid.get(i),"隧道信息获取成功"));
 		}
 		Message msg=new Message();
 		Bundle data=new Bundle();
@@ -121,13 +122,14 @@ public class AuthThread extends Thread
 		try
 		{
 			JSONObject authData=new JSONObject(data);
+			authData.put("sunnyid",id);
 			if (authData.getInt("status") != 200)
 			{
 				authdata.add("err:没有通过服务器的验证，检查你的输入？\n来自服务器的消息:\n" + Utils.unicodeToString(authData.getString("msg")));
 			}
 			else
 			{
-				authdata.add(data);
+				authdata.add(authData.toString());
 			}
 		}
 		catch (JSONException e)

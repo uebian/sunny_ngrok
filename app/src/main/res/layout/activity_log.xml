@@ -3,8 +3,8 @@
 	xmlns:android="http://schemas.android.com/apk/res/android"
 	xmlns:app="http://schemas.android.com/apk/res-auto"
 	xmlns:tools="http://schemas.android.com/tools"
-	android:layout_width="match_parent"
-	android:layout_height="match_parent"
+	android:layout_width="fill_parent"
+	android:layout_height="fill_parent"
 	android:orientation="vertical">
 
 	<android.support.design.widget.AppBarLayout
@@ -22,49 +22,38 @@
 
 	</android.support.design.widget.AppBarLayout>
 
-	<TextView
-		android:layout_width="wrap_content"
-		android:layout_height="wrap_content"
-		android:text="在这之前，您没有启动任何有效的隧道，请现在添加并启动隧道。点击下面的列表可以删除已添加的隧道。"/>
-
-	<TextView
-		android:layout_width="match_parent"
-		android:layout_height="wrap_content"
-		android:text="这个应用程序仅仅支持ngrok隧道"
-		android:textColor="#FF0000"/>
-
-	<LinearLayout
-		android:layout_height="wrap_content"
-		android:layout_width="match_parent"
-		android:orientation="horizontal">
-
-		<EditText
-			android:layout_height="wrap_content"
-			android:layout_width="0dp"
-			android:layout_weight="1.0"
-			android:hint="隧道ID"
-			android:id="@+id/et_clientid"
-			android:inputType="text|textShortMessage"/>
-
-		<Button
-			android:layout_height="wrap_content"
-			android:layout_width="wrap_content"
-			android:text="添加"
-			android:id="@+id/btn_add"/>
-
-	</LinearLayout>
-
 	<ListView
-		android:layout_width="match_parent"
+		android:layout_width="wrap_content"
 		android:layout_height="0dp"
 		android:layout_weight="1.0"
-		android:id="@+id/lv_addtunne"/>
+		android:id="@+id/lv_log"/>
 
-	<Button
+	<LinearLayout
+		android:orientation="horizontal"
 		android:layout_width="match_parent"
-		android:layout_height="wrap_content"
-		android:text="启动"
-		android:id="@+id/btn_start"/>
+		android:layout_height="wrap_content">
+
+		<Button
+			android:layout_width="0dp"
+			android:layout_height="wrap_content"
+			android:text="上一页"
+			android:layout_weight="1.0"
+			android:id="@+id/btn_prepage"/>
+
+		<Button
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:text="刷新"
+			android:id="@+id/btn_refresh"/>
+
+		<Button
+			android:layout_width="0dp"
+			android:layout_height="wrap_content"
+			android:text="下一页"
+			android:layout_weight="1.0"
+			android:id="@+id/btn_nexpage"/>
+
+	</LinearLayout>
 
 	<com.google.android.gms.ads.AdView
 		xmlns:ads="http://schemas.android.com/apk/res-auto"
@@ -72,7 +61,7 @@
 		android:layout_width="match_parent"
 		android:layout_height="wrap_content"
 		ads:adSize="SMART_BANNER"
-		ads:adUnitId="ca-app-pub-4267459436057308/7200868216">
+		ads:adUnitId="ca-app-pub-4267459436057308/8504026771">
 
 	</com.google.android.gms.ads.AdView>
 

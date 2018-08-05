@@ -2,14 +2,14 @@ package net.newlydev.ngrok.ngrok_core;
 
 import java.io.*;
 import java.nio.*;
-import org.json.*;
 import javax.net.ssl.*;
+import net.newlydev.ngrok.*;
+import org.json.*;
 
 public class MessageListeningThread extends Thread
 {
 	MessageHandler mh;
 	SSLSocket socket;
-	public boolean closeforever=false;
 	public MessageListeningThread(MessageHandler mh, SSLSocket socket)
 	{
 		this.mh = mh;
@@ -23,7 +23,7 @@ public class MessageListeningThread extends Thread
 			byte[] hLen_old = new byte[8];
 			byte[] strByte;
 			BufferedInputStream bis = new BufferedInputStream(socket.getInputStream());
-			while (!closeforever)
+			while (mh.islistening)
 			{
 				/*while (bis.available() >= 8)
 				{
@@ -53,17 +53,21 @@ public class MessageListeningThread extends Thread
 					readCount += read;
 				}
 				JSONObject json = new JSONObject(new String(strByte, "UTF-8"));
-				if (mh.handleMessage(json))
-				{
-					return;
-				}
+				mh.handleMessage(json);
 			}
+			LogManager.addLogs(new LogManager.Log("V",mh.getTunnel().getSunnyid(),"消息接受线程退出"));
 			//socket.close();
 		}
 		catch (Exception e)
 		{
 			e.printStackTrace();
-			mh.getTunnel().unlinked(e.toString(),socket);
+			if(mh instanceof ControlConnectMessageHandler)
+			{
+				mh.getTunnel().unlinked(e.toString());
+			}
+		}catch(OutOfMemoryError oom)
+		{
+			mh.getTunnel().unlinked("发生了OOM错误");
 		}
 	}
 	public MessageHandler getMessageHandler()

@@ -45,7 +45,7 @@ public class MainService extends Service
 			{
 				for (Tunnel tunnel:tunns)
 				{
-					tunnel.closeforever();
+					tunnel.close();
 				}
 			}
 		}.start();
@@ -66,7 +66,7 @@ public class MainService extends Service
 				JSONObject real_data=(JSONObject) authData.getJSONArray("data").get(0);
 				String tcporhttp=real_data.getJSONObject("proto").keys().next();
 				Tunnel tunnel = new Tunnel(authData.getString("server").split(":")[0], Integer.parseInt(authData.getString("server").split(":")[1]), 
-										   real_data.getJSONObject("proto").getString(tcporhttp).split(":")[0], Integer.parseInt(real_data.getJSONObject("proto").getString(tcporhttp).split(":")[1]), tcporhttp, real_data.getString("subdomain"), real_data.getString("hostname"), authData.getJSONArray("data").getJSONObject(0).getInt("remoteport"), real_data.getString("httpauth"), MainService.this);
+										   real_data.getJSONObject("proto").getString(tcporhttp).split(":")[0], Integer.parseInt(real_data.getJSONObject("proto").getString(tcporhttp).split(":")[1]), tcporhttp, real_data.getString("subdomain"), real_data.getString("hostname"), authData.getJSONArray("data").getJSONObject(0).getInt("remoteport"), real_data.getString("httpauth"), MainService.this,authData.getString("sunnyid"));
 				tunns.add(tunnel);
 				tunnel.open();
 			}

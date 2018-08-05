@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v7.preference.PreferenceScreen
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <android.support.v7.preference.PreferenceCategory
+        android:title="日志">
+		
+        <android.support.v7.preference.CheckBoxPreference
+            android:key="uselog"
+            android:title="使用日志"
+            android:defaultValue="false"/>
+    </android.support.v7.preference.PreferenceCategory>
+	<android.support.v7.preference.PreferenceCategory
+        android:title="广告">
+		<android.support.v7.preference.CheckBoxPreference
+            android:key="usesmallad"
+            android:title="使用更小尺寸的广告"
+            android:defaultValue="false"/>
+		<android.support.v7.preference.Preference
+            android:key="howtoclosead"
+            android:title="如何关闭广告"
+            android:defaultValue="false"/>
+	</android.support.v7.preference.PreferenceCategory>
+</android.support.v7.preference.PreferenceScreen>

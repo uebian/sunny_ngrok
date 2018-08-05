@@ -16,14 +16,15 @@ public class SocketDownThread extends Thread
 	Socket outputSocket;
     private OutputStream out;
 	Tunnel tunnel;
-
-    public SocketDownThread(SSLSocket input, Socket output,Tunnel tunnel) throws IOException
+	ProxyConnectMessageHandler pcmh;
+    public SocketDownThread(ProxyConnectMessageHandler pcmh,SSLSocket input, Socket output,Tunnel tunnel) throws IOException
 	{
         this.in = new BufferedInputStream(input.getInputStream());
         this.out = new BufferedOutputStream(output.getOutputStream());
 		this.inputSocket = input;
 		this.outputSocket = output;
 		this.tunnel=tunnel;
+		this.pcmh=pcmh;
     }
 	@Override
     public void run()
@@ -62,6 +63,7 @@ public class SocketDownThread extends Thread
 		}
 		catch (IOException e)
 		{}
+		pcmh.stop();
     }
 }
 
