@@ -1,7 +1,10 @@
 package net.newlydev.ngrok.activities;
 import android.os.*;
 import android.support.v7.app.*;
+import android.support.v7.preference.*;
 import android.support.v7.widget.*;
+import android.view.*;
+import android.view.View.*;
 import android.widget.*;
 import com.google.android.gms.ads.*;
 import java.util.*;
@@ -9,8 +12,6 @@ import net.newlydev.ngrok.*;
 
 import android.support.v7.widget.Toolbar;
 import net.newlydev.ngrok.R;
-import android.view.View.*;
-import android.view.*;
 
 public class LogActivity extends AppCompatActivity
 {
@@ -25,8 +26,15 @@ public class LogActivity extends AppCompatActivity
 		setContentView(R.layout.activity_log);
 		setSupportActionBar((Toolbar)findViewById(R.id.toolbar_normal));
 		
-		AdView adview=(AdView) findViewById(R.id.adView);
-		//AdRequest adRequest = new AdRequest.Builder().addTestDevice("27E31343F422BD0D601A6F9D3D438A95").build();
+		final AdView adview=new AdView(this);
+		((LinearLayout)findViewById(R.id.adLayout)).addView(adview);
+		adview.setAdUnitId("ca-app-pub-4267459436057308/8504026771");
+		if(PreferenceManager.getDefaultSharedPreferences(this).getBoolean("notusesmartad",false))
+		{
+			adview.setAdSize(AdSize.BANNER);
+		}else{
+			adview.setAdSize(AdSize.SMART_BANNER);
+		}
 		AdRequest adRequest=new AdRequest.Builder().build();
         adview.loadAd(adRequest);
 		ListView lv=(ListView) findViewById(R.id.lv_log);

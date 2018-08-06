@@ -1,10 +1,12 @@
 package net.newlydev.ngrok;
 import android.widget.*;
 import java.util.*;
+import android.content.*;
 
 public class LogManager
 {
 	private static ArrayList<Log> logs=new ArrayList<Log>();
+	private static boolean isopenlog=false;
 	public static class Log
 	{
 		public int year,month,day,hour,minute,second,millisecoud;
@@ -26,12 +28,23 @@ public class LogManager
 			threadid=Thread.currentThread().getId();
 		}
 	}
+	public static void openlog()
+	{
+		isopenlog=true;
+	}
 	public static void addLogs(Log log)
 	{
-		logs.add(0,log);
+		if(isopenlog)
+		{
+			logs.add(0,log);
+		}
 	}
 	public static ArrayList<Log> getLogs()
 	{
 		return logs;
+	}
+	public static boolean getisopenlog()
+	{
+		return isopenlog;
 	}
 }

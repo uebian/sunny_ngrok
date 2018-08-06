@@ -3,6 +3,7 @@ import android.app.*;
 import android.graphics.*;
 import android.os.*;
 import android.support.v7.app.*;
+import android.support.v7.preference.*;
 import android.support.v7.widget.*;
 import android.view.*;
 import android.view.View.*;
@@ -27,8 +28,15 @@ public class TunneInfoActivity extends AppCompatActivity
 		// TODO: Implement this method
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_tunneinfo);
-		AdView adview=(AdView) findViewById(R.id.adView);
-		//AdRequest adRequest = new AdRequest.Builder().addTestDevice("27E31343F422BD0D601A6F9D3D438A95").build();
+		final AdView adview=new AdView(this);
+		((LinearLayout)findViewById(R.id.adLayout)).addView(adview);
+		adview.setAdUnitId("ca-app-pub-4267459436057308/1136230739");
+		if(PreferenceManager.getDefaultSharedPreferences(this).getBoolean("notusesmartad",false))
+		{
+			adview.setAdSize(AdSize.BANNER);
+		}else{
+			adview.setAdSize(AdSize.SMART_BANNER);
+		}
 		AdRequest adRequest=new AdRequest.Builder().build();
         adview.loadAd(adRequest);
 		pd=new ProgressDialog(this);

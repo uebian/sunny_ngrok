@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:app="http://schemas.android.com/apk/res-auto"
+	xmlns:tools="http://schemas.android.com/tools"
+	android:layout_width="fill_parent"
+	android:layout_height="fill_parent"
+	android:orientation="vertical">
+
+	<android.support.design.widget.AppBarLayout
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		style="@style/mToolBar">
+
+		<android.support.v7.widget.Toolbar
+			android:id="@+id/toolbar_normal"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			app:titleTextColor="#ffffff">
+
+		</android.support.v7.widget.Toolbar>
+
+	</android.support.design.widget.AppBarLayout>
+
+	<LinearLayout
+		android:layout_width="fill_parent"
+		android:layout_height="fill_parent"
+		android:orientation="vertical"
+		android:gravity="center">
+
+		<ImageView
+			android:layout_height="wrap_content"
+			android:layout_width="wrap_content"
+			android:src="@drawable/ic_launcher"/>
+
+		<TextView
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:textAppearance="?android:attr/textAppearanceLarge"
+			android:text="Sunny Ngrok for Android"/>
+
+		<TextView
+			android:layout_height="wrap_content"
+			android:layout_width="wrap_content"
+			android:text="开源的ngrok.cc的ngrok第三方客户端"/>
+
+		<TextView
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:id="@+id/tv_ver"/>
+
+		<LinearLayout
+			android:layout_height="wrap_content"
+			android:layout_width="match_parent"
+			android:orientation="horizontal"
+			android:padding="10dp">
+
+			<Button
+				android:layout_width="0dp"
+				android:layout_height="wrap_content"
+				android:text="访问ngrok.cc"
+				android:layout_weight="1.0"
+				android:id="@+id/btn_openoffwebsite"/>
+
+			<Button
+				android:layout_height="wrap_content"
+				android:layout_width="0dp"
+				android:text="源代码(需有效的网络连接)"
+				android:id="@+id/btn_sourcecode"
+				android:layout_weight="1.0"/>
+
+		</LinearLayout>
+
+	</LinearLayout>
+
+</LinearLayout>
+

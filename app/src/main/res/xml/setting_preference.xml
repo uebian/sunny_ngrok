@@ -8,17 +8,19 @@
         <android.support.v7.preference.CheckBoxPreference
             android:key="uselog"
             android:title="使用日志"
+			android:summary="会占用更多的内存，仅供调试使用，需重新启动应用程序后才会生效"
             android:defaultValue="false"/>
     </android.support.v7.preference.PreferenceCategory>
 	<android.support.v7.preference.PreferenceCategory
         android:title="广告">
 		<android.support.v7.preference.CheckBoxPreference
-            android:key="usesmallad"
-            android:title="使用更小尺寸的广告"
+            android:key="notusesmartad"
+            android:title="不使用智能大小的广告"
+			android:summary="智能大小的广告会根据您的屏幕分辨率进行智能调整，但有时会过大或过小使您感到不适。启用此选项后我们将会固定广告大小，您可能需要在重启某些页面后才能应用此设置"
             android:defaultValue="false"/>
-		<android.support.v7.preference.Preference
+		<!--<android.support.v7.preference.Preference
             android:key="howtoclosead"
             android:title="如何关闭广告"
-            android:defaultValue="false"/>
+            android:defaultValue="false"/>-->
 	</android.support.v7.preference.PreferenceCategory>
 </android.support.v7.preference.PreferenceScreen>

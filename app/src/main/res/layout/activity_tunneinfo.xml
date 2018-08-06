@@ -127,13 +127,10 @@
 		android:layout_height="0dp"
 		android:layout_weight="1.0"/>
 
-	<com.google.android.gms.ads.AdView
-		xmlns:ads="http://schemas.android.com/apk/res-auto"
-		android:id="@+id/adView"
+	<LinearLayout
+		android:orientation="vertical"
 		android:layout_width="match_parent"
 		android:layout_height="wrap_content"
-		ads:adSize="SMART_BANNER"
-		ads:adUnitId="ca-app-pub-4267459436057308/1519374118"/>
-
+		android:id="@+id/adLayout"/>
 </LinearLayout>
 

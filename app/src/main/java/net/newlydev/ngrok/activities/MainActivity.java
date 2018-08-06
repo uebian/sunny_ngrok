@@ -18,6 +18,7 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.Toolbar;
 import android.view.View.OnClickListener;
 import net.newlydev.ngrok.R;
+import android.support.v7.preference.*;
 
 public class MainActivity extends AppCompatActivity
 {
@@ -33,7 +34,15 @@ public class MainActivity extends AppCompatActivity
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-		AdView adview=(AdView) findViewById(R.id.adView);
+		final AdView adview=new AdView(this);
+		((LinearLayout)findViewById(R.id.adLayout)).addView(adview);
+		adview.setAdUnitId("ca-app-pub-4267459436057308/7200868216");
+		if(PreferenceManager.getDefaultSharedPreferences(this).getBoolean("notusesmartad",false))
+		{
+			adview.setAdSize(AdSize.BANNER);
+		}else{
+			adview.setAdSize(AdSize.SMART_BANNER);
+		}
 		//AdRequest adRequest = new AdRequest.Builder().addTestDevice("27E31343F422BD0D601A6F9D3D438A95").build();
 		AdRequest adRequest=new AdRequest.Builder().build();
         adview.loadAd(adRequest);
@@ -209,4 +218,27 @@ public class MainActivity extends AppCompatActivity
 			});
 
     }
+
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu)
+	{
+		// TODO: Implement this method
+		menu.add("设置");
+		menu.add("关于");
+		return super.onCreateOptionsMenu(menu);
+	}
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item)
+	{
+		switch (item.getTitle().toString())
+		{
+			case "设置":
+				startActivity(new Intent(this, SettingActivity.class));
+				break;
+			case "关于":
+				startActivity(new Intent(this, AboutActivity.class));
+				break;
+		}
+		return super.onOptionsItemSelected(item);
+	}
 }

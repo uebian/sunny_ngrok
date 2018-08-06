@@ -3,6 +3,7 @@ package net.newlydev.ngrok.activities;
 import android.content.*;
 import android.os.*;
 import android.support.v7.app.*;
+import android.support.v7.preference.*;
 import android.support.v7.widget.*;
 import android.view.*;
 import android.widget.*;
@@ -36,14 +37,23 @@ public class ViewTunneActivity extends AppCompatActivity
 		// TODO: Implement this method
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_viewtunne);
-		AdView adview=(AdView) findViewById(R.id.adView);
-		//AdRequest adRequest = new AdRequest.Builder().addTestDevice("27E31343F422BD0D601A6F9D3D438A95").build();
+		final AdView adview=new AdView(this);
+		((LinearLayout)findViewById(R.id.adLayout)).addView(adview);
+		adview.setAdUnitId("ca-app-pub-4267459436057308/1519374118");
+		if (PreferenceManager.getDefaultSharedPreferences(this).getBoolean("notusesmartad", false))
+		{
+			adview.setAdSize(AdSize.BANNER);
+		}
+		else
+		{
+			adview.setAdSize(AdSize.SMART_BANNER);
+		}
 		AdRequest adRequest=new AdRequest.Builder().build();
         adview.loadAd(adRequest);
 		setSupportActionBar((Toolbar)findViewById(R.id.toolbar_normal));
 		if (!Utils.isMainServiceRunning(this))
 		{
-			startActivity(new Intent(this,MainActivity.class));
+			startActivity(new Intent(this, MainActivity.class));
 			finish();
 		}
 		else
@@ -91,7 +101,7 @@ public class ViewTunneActivity extends AppCompatActivity
 									tunns.clear();
 									for (final Tunnel tunnel:service.service.tunns)
 									{
-										switch(tunnel.getStatus())
+										switch (tunnel.getStatus())
 										{
 											case 0:
 												tunns.add(tunnel.getRemoteUrl() + "->" + tunnel.getLocalIP() + ":" + tunnel.getLocalPort());
@@ -160,13 +170,20 @@ public class ViewTunneActivity extends AppCompatActivity
 		switch (item.getTitle().toString())
 		{
 			case "日志":
-				startActivity(new Intent(this,LogActivity.class));
+				if (LogManager.getisopenlog())
+				{
+					startActivity(new Intent(this, LogActivity.class));
+				}
+				else
+				{
+					Toast.makeText(this, "日志功能未开启，请在设置中打开日志功能并重启应用(终止客户端后再开)", Toast.LENGTH_SHORT).show();
+				}
 				break;
 			case "设置":
-				startActivity(new Intent(this,SettingActivity.class));
+				startActivity(new Intent(this, SettingActivity.class));
 				break;
 			case "关于":
-				startActivity(new Intent(this,AboutActivity.class));
+				startActivity(new Intent(this, AboutActivity.class));
 				break;
 			case "终止客户端":
 				new AlertDialog.Builder(this).setTitle("警告").setMessage("这将会关闭所有的ngrok隧道，您确定继续吗？").setCancelable(false).setPositiveButton("确定", new DialogInterface.OnClickListener(){
@@ -179,8 +196,8 @@ public class ViewTunneActivity extends AppCompatActivity
 							finish();
 							// TODO: Implement this method
 						}
-					}).setNegativeButton("取消",null).show();
-				
+					}).setNegativeButton("取消", null).show();
+
 				break;
 		}
 		// TODO: Implement this method

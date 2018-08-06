@@ -70,7 +70,7 @@ public class ProxyConnectMessageHandler extends MessageHandler
 
 					}
 				}
-				LogManager.addLogs(new LogManager.Log("V", tunnel.getSunnyid(), "停止msg"));
+				LogManager.addLogs(new LogManager.Log("V", tunnel.getSunnyid(), "停止代理"));
 				islistening = false;
 				break;
 		}
