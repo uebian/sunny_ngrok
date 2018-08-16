@@ -1,6 +1,7 @@
 package net.newlydev.ngrok.activities;
 
 import android.content.*;
+import android.content.pm.*;
 import android.net.*;
 import android.os.*;
 import android.support.v7.app.*;
@@ -44,6 +45,12 @@ public class AboutActivity extends AppCompatActivity
 					// TODO: Implement this method
 				}
 			});
+		try
+		{
+			((TextView)findViewById(R.id.tv_ver)).setText(getPackageManager().getPackageInfo(getPackageName(), 0).versionName);
+		}
+		catch (PackageManager.NameNotFoundException e)
+		{}
 	}
 
 }
