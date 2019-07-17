@@ -24,7 +24,6 @@ public class LogActivity extends AppCompatActivity
 	@Override
 	protected void onCreate(Bundle savedInstanceState)
 	{
-		// TODO: Implement this method
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_log);
 		setSupportActionBar((Toolbar)findViewById(R.id.toolbar_normal));
@@ -52,7 +51,6 @@ public class LogActivity extends AppCompatActivity
 				{
 					page--;
 					update();
-					// TODO: Implement this method
 				}
 			});
 		Button nxtpage=(Button) findViewById(R.id.btn_nexpage);
@@ -63,7 +61,6 @@ public class LogActivity extends AppCompatActivity
 				{
 					page++;
 					update();
-					// TODO: Implement this method
 				}
 			});
 		refresh.setOnClickListener(new OnClickListener(){
@@ -72,7 +69,6 @@ public class LogActivity extends AppCompatActivity
 				public void onClick(View p1)
 				{
 					update();
-					// TODO: Implement this method
 				}
 			});
 		//adapter.setDropDownViewResource(android.R.layout.simple_list_item_1);  

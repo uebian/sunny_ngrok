@@ -20,14 +20,12 @@ public class ProxyConnectMessageHandler extends MessageHandler
 	@Override
 	public SSLSocket getSocket()
 	{
-		// TODO: Implement this method
 		return socket;
 	}
 
 	@Override
 	public Tunnel getTunnel()
 	{
-		// TODO: Implement this method
 		return tunnel;
 	}
 
@@ -74,7 +72,6 @@ public class ProxyConnectMessageHandler extends MessageHandler
 				islistening = false;
 				break;
 		}
-		// TODO: Implement this method
 	}
 
 

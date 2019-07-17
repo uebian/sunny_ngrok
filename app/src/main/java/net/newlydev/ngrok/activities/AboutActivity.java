@@ -18,7 +18,6 @@ public class AboutActivity extends AppCompatActivity
 	@Override
 	protected void onCreate(Bundle savedInstanceState)
 	{
-		// TODO: Implement this method
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_about);
 		setSupportActionBar((Toolbar)findViewById(R.id.toolbar_normal));
@@ -30,7 +29,6 @@ public class AboutActivity extends AppCompatActivity
 					Uri uri = Uri.parse("https://www.ngrok.cc");
 					Intent intent = new Intent(Intent.ACTION_VIEW, uri);
 					startActivity(intent);
-					// TODO: Implement this method
 				}
 			});
 		((Button)findViewById(R.id.btn_sourcecode)).setOnClickListener(new OnClickListener(){
@@ -41,7 +39,6 @@ public class AboutActivity extends AppCompatActivity
 					Uri uri = Uri.parse("https://github.com/uebian/sunny_ngrok");
 					Intent intent = new Intent(Intent.ACTION_VIEW, uri);
 					startActivity(intent);
-					// TODO: Implement this method
 				}
 			});
 		try

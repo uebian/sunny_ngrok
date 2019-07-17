@@ -7,20 +7,20 @@
 	android:layout_height="fill_parent"
 	android:orientation="vertical">
 
-	<android.support.design.widget.AppBarLayout
+	<com.google.android.material.appbar.AppBarLayout
 		android:layout_width="match_parent"
 		android:layout_height="wrap_content"
 		style="@style/mToolBar">
 
-		<android.support.v7.widget.Toolbar
+		<androidx.appcompat.widget.Toolbar
 			android:id="@+id/toolbar_normal"
 			android:layout_width="match_parent"
 			android:layout_height="wrap_content"
 			app:titleTextColor="#ffffff">
 
-		</android.support.v7.widget.Toolbar>
+		</androidx.appcompat.widget.Toolbar>
 
-	</android.support.design.widget.AppBarLayout>
+	</com.google.android.material.appbar.AppBarLayout>
 
 	<ListView
 		android:layout_width="wrap_content"

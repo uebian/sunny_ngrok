@@ -26,7 +26,6 @@ public class TunneInfoActivity extends AppCompatActivity
 	@Override
 	protected void onCreate(Bundle savedInstanceState)
 	{
-		// TODO: Implement this method
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_tunneinfo);
 		final AdView adview=new AdView(this);
@@ -52,7 +51,6 @@ public class TunneInfoActivity extends AppCompatActivity
 				{
 					tunnel.open();
 					pd.show();
-					// TODO: Implement this method
 				}
 			});
 		btn_stop = (Button) findViewById(R.id.btn_stop);
@@ -62,7 +60,6 @@ public class TunneInfoActivity extends AppCompatActivity
 				public void onClick(View p1)
 				{
 					tunnel.close();
-					// TODO: Implement this method
 				}
 			});
 		tv_status = (TextView) findViewById(R.id.tv_status);
@@ -76,13 +73,12 @@ public class TunneInfoActivity extends AppCompatActivity
 						String error=tunnel.geterrmsg();
 						new AlertDialog.Builder(TunneInfoActivity.this).setTitle("错误详情").setMessage(error).setPositiveButton("确定",null).show();
 					}
-					// TODO: Implement this method
 				}
 			});
 		tv_downloaddata=(TextView) findViewById(R.id.tv_downloaddata);
 		tv_uploaddata=(TextView) findViewById(R.id.tv_uploaddata);
 		tv_speed=(TextView) findViewById(R.id.tv_speed);
-		tunnel = ViewTunneActivity.service.tunns.get(getIntent().getExtras().get("tuncount"));
+		tunnel = ViewTunneActivity.service.tunns.get((int)getIntent().getExtras().get("tuncount"));
 		setTitle("隧道详细:" + tunnel.getLocalIP() + ":" + tunnel.getLocalPort());
 		ViewTunneActivity.setTunneInfoActivity(this);
 		update();
@@ -127,7 +123,6 @@ public class TunneInfoActivity extends AppCompatActivity
 	@Override
 	protected void onDestroy()
 	{
-		// TODO: Implement this method
 		super.onDestroy();
 		ViewTunneActivity.setTunneInfoActivity(null);
 	}

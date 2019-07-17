@@ -49,7 +49,6 @@ public class ViewTunneActivity extends AppCompatActivity
 	@Override
 	protected void onCreate(Bundle savedInstanceState)
 	{
-		// TODO: Implement this method
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_viewtunne);
 		final AdView adview=new AdView(this);
@@ -85,7 +84,6 @@ public class ViewTunneActivity extends AppCompatActivity
 						Intent i=new Intent(ViewTunneActivity.this, TunneInfoActivity.class);
 						i.putExtra("tuncount", p3);
 						startActivity(i);
-						// TODO: Implement this method
 					}
 				});
 			bindService(new Intent(this, MainService.class), conn, Context.BIND_AUTO_CREATE);
@@ -133,11 +131,8 @@ public class ViewTunneActivity extends AppCompatActivity
 										}
 									}
 									adapter.notifyDataSetChanged();
-									// TODO: Implement this method
 								}
 							});
-
-						// TODO: Implement this method
 					}
 				});
 			service.service.notice_tunnel_update();
@@ -155,7 +150,6 @@ public class ViewTunneActivity extends AppCompatActivity
 	@Override
 	public void onDestroy()
 	{
-		// TODO: Implement this method
 		super.onDestroy();
 		if (Utils.isMainServiceRunning(this))
 		{
@@ -165,7 +159,7 @@ public class ViewTunneActivity extends AppCompatActivity
 
 	public static interface updateListener
 	{
-		void onUpdate()
+		void onUpdate();
 	}
 
 	@Override
@@ -175,7 +169,6 @@ public class ViewTunneActivity extends AppCompatActivity
 		menu.add("设置");
 		menu.add("关于");
 		menu.add("终止客户端");
-		// TODO: Implement this method
 		return super.onCreateOptionsMenu(menu);
 	}
 
@@ -209,13 +202,11 @@ public class ViewTunneActivity extends AppCompatActivity
 							unbindService(conn);
 							stopService(new Intent(ViewTunneActivity.this, MainService.class));
 							finish();
-							// TODO: Implement this method
 						}
 					}).setNegativeButton("取消", null).show();
 
 				break;
 		}
-		// TODO: Implement this method
 		return super.onOptionsItemSelected(item);
 	}
 }

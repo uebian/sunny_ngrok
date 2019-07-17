@@ -89,7 +89,6 @@ public class Tunnel
 	}
 	public String getLocalIP()
 	{
-		// TODO: Implement this method
 		return localIP;
 	}
 

@@ -59,7 +59,6 @@ public class ControlConnectMessageHandler extends MessageHandler
 			//e.printStackTrace();
 		}
 		islistening=false;
-		// TODO: Implement this method
 	}
 	public Tunnel getTunnel()
 	{
@@ -73,7 +72,6 @@ public class ControlConnectMessageHandler extends MessageHandler
 	{
 		Function.sendMessage(socket, "{\"Type\":\"Ping\",\"Payload\":{}}");
 		lastPing = System.currentTimeMillis();
-		// TODO: Implement this method
 	}
 	public void removeProxyConnect(ProxyConnectMessageHandler pcmh)
 	{
@@ -111,7 +109,6 @@ public class ControlConnectMessageHandler extends MessageHandler
 				}
 				catch (Exception e)
 				{
-
 				}
 				try
 				{

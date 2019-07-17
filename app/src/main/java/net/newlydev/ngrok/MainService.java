@@ -17,12 +17,10 @@ public class MainService extends Service
 	public void setUpdateListener(ViewTunneActivity.updateListener listener)
 	{
 		this.listener = listener;
-		// TODO: Implement this method
 	}
 	@Override
 	public void onCreate()
 	{
-		// TODO: Implement this method
 		super.onCreate();
 		builder = new Notification.Builder(this);
 		builder.setContentTitle("Ngrok客户端服务运行中");
@@ -35,7 +33,6 @@ public class MainService extends Service
 	@Override
 	public void onDestroy()
 	{
-		// TODO: Implement this method
 		super.onDestroy();
 		new Thread()
 		{
@@ -78,7 +75,6 @@ public class MainService extends Service
 				public void run()
 				{
 					notice_tunnel_update();
-					// TODO: Implement this method
 				}
 			}, 500);
 		//{"status":200,"msg":"获取隧道成功","server":"free.ngrok.cc:4443","data":[{"remoteport":19420,"subdomain":"","hostname":"","httpauth":"","proto":{"tcp":"127.0.0.1:80"}}]}
@@ -95,8 +91,6 @@ public class MainService extends Service
 	@Override
 	public IBinder onBind(Intent p1)
 	{
-
-		// TODO: Implement this method
 		return new mBinder();
 	}
 	public class mBinder extends Binder

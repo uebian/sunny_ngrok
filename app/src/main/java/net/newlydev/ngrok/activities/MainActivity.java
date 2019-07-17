@@ -111,7 +111,6 @@ public class MainActivity extends AppCompatActivity
 							btn_start.setEnabled(false);
 						}
 					}
-					// TODO: Implement this method
 				}
 			});
 		final ProgressDialog pd=new ProgressDialog(this);
@@ -128,7 +127,6 @@ public class MainActivity extends AppCompatActivity
 					}else{
 						btn_start.setEnabled(false);
 					}
-					// TODO: Implement this method
 				}
 				
 			});
@@ -185,7 +183,6 @@ public class MainActivity extends AppCompatActivity
 										finish();
 										startActivity(new Intent(MainActivity.this, ViewTunneActivity.class));
 									}
-									// TODO: Implement this method
 								}
 							}).setNegativeButton("重新输入", null).show();
 					}
@@ -209,7 +206,6 @@ public class MainActivity extends AppCompatActivity
 					try
 					{
 						new AuthThread(clientidlist, callback).start();
-						// TODO: Implement this method
 					}
 					catch (Exception e)
 					{
@@ -221,7 +217,6 @@ public class MainActivity extends AppCompatActivity
 									pd.dismiss();
 									errordlg.setMessage("您的输入似乎不正确，请检查后重试。");
 									errordlg.show();
-									// TODO: Implement this method
 								}
 							});
 					}}
@@ -232,7 +227,6 @@ public class MainActivity extends AppCompatActivity
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu)
 	{
-		// TODO: Implement this method
 		menu.add("设置");
 		menu.add("关于");
 		return super.onCreateOptionsMenu(menu);

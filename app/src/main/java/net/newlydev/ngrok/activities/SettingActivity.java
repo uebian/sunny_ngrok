@@ -10,12 +10,9 @@ public class SettingActivity extends AppCompatActivity
 	@Override
 	protected void onCreate(Bundle savedInstanceState)
 	{
-		// TODO: Implement this method
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_setting);
 		setSupportActionBar((Toolbar)findViewById(R.id.toolbar_normal));
-		//PreferenceFragmentCompat pfc;
-		
 	}
 	
 }
