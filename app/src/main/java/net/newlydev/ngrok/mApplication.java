@@ -1,7 +1,7 @@
 package net.newlydev.ngrok;
-import android.app.*;
-import com.google.android.gms.ads.*;
-import android.support.v7.preference.*;
+import android.app.Application;
+import androidx.preference.PreferenceManager;
+import com.google.android.gms.ads.MobileAds;
 
 public class mApplication extends Application
 {

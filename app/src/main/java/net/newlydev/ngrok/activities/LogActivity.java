@@ -1,16 +1,19 @@
 package net.newlydev.ngrok.activities;
-import android.os.*;
-import android.support.v7.app.*;
-import android.support.v7.preference.*;
-import android.support.v7.widget.*;
-import android.view.*;
-import android.view.View.*;
-import android.widget.*;
-import com.google.android.gms.ads.*;
-import java.util.*;
-import net.newlydev.ngrok.*;
-
-import android.support.v7.widget.Toolbar;
+import android.os.Bundle;
+import android.view.View;
+import android.view.View.OnClickListener;
+import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.LinearLayout;
+import android.widget.ListView;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+import androidx.preference.PreferenceManager;
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdSize;
+import com.google.android.gms.ads.AdView;
+import java.util.ArrayList;
+import net.newlydev.ngrok.LogManager;
 import net.newlydev.ngrok.R;
 
 public class LogActivity extends AppCompatActivity

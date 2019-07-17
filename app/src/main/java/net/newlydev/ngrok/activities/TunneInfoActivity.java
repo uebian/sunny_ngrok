@@ -1,20 +1,21 @@
 package net.newlydev.ngrok.activities;
-import android.app.*;
-import android.graphics.*;
-import android.os.*;
-import android.support.v7.app.*;
-import android.support.v7.preference.*;
-import android.support.v7.widget.*;
-import android.view.*;
-import android.view.View.*;
-import android.widget.*;
-import com.google.android.gms.ads.*;
-import net.newlydev.ngrok.*;
-import net.newlydev.ngrok.ngrok_core.*;
-
-import android.support.v7.app.AlertDialog;
-import android.support.v7.widget.Toolbar;
+import android.app.AlertDialog;
+import android.app.ProgressDialog;
+import android.graphics.Color;
+import android.os.Bundle;
+import android.view.View;
+import android.view.View.OnClickListener;
+import android.widget.Button;
+import android.widget.LinearLayout;
+import android.widget.TextView;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.preference.PreferenceManager;
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdSize;
+import com.google.android.gms.ads.AdView;
 import net.newlydev.ngrok.R;
+import net.newlydev.ngrok.ngrok_core.Tunnel;
+import androidx.appcompat.widget.Toolbar;
 
 public class TunneInfoActivity extends AppCompatActivity
 {

@@ -1,8 +1,8 @@
 package net.newlydev.ngrok.activities;
-import android.os.*;
-import android.support.v7.app.*;
-import android.support.v7.preference.*;
-import android.support.v7.widget.*;
+import android.os.Bundle;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+import net.newlydev.ngrok.R;
 
 public class SettingActivity extends AppCompatActivity
 {

@@ -65,7 +65,7 @@
 			<Button
 				android:layout_height="wrap_content"
 				android:layout_width="0dp"
-				android:text="源代码(需有效的网络连接)"
+				android:text="源代码"
 				android:id="@+id/btn_sourcecode"
 				android:layout_weight="1.0"/>
 

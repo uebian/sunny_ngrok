@@ -1,24 +1,34 @@
 package net.newlydev.ngrok.activities;
 
-import android.app.*;
-import android.content.*;
-import android.os.*;
-import android.support.v7.app.*;
-import android.support.v7.widget.*;
-import android.view.*;
-import android.view.View.*;
-import android.widget.*;
-import android.widget.AdapterView.*;
-import com.google.android.gms.ads.*;
-import java.util.*;
-import net.newlydev.ngrok.*;
-import net.newlydev.ngrok.ngrok_core.*;
-
-import android.support.v7.app.AlertDialog;
-import android.support.v7.widget.Toolbar;
+import android.app.AlertDialog;
+import android.app.ProgressDialog;
+import android.content.DialogInterface;
+import android.content.Intent;
+import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
+import android.view.Menu;
+import android.view.MenuItem;
+import android.view.View;
 import android.view.View.OnClickListener;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
+import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.LinearLayout;
+import android.widget.ListView;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.preference.PreferenceManager;
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdSize;
+import com.google.android.gms.ads.AdView;
+import java.util.ArrayList;
+import net.newlydev.ngrok.MainService;
 import net.newlydev.ngrok.R;
-import android.support.v7.preference.*;
+import net.newlydev.ngrok.Utils;
+import net.newlydev.ngrok.ngrok_core.AuthThread;
+import androidx.appcompat.widget.Toolbar;
 
 public class MainActivity extends AppCompatActivity
 {

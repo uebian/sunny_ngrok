@@ -1,17 +1,16 @@
 package net.newlydev.ngrok.activities;
 
-import android.content.*;
-import android.content.pm.*;
-import android.net.*;
-import android.os.*;
-import android.support.v7.app.*;
-import android.support.v7.widget.*;
-import android.view.*;
-import android.view.View.*;
-import android.widget.*;
-import net.newlydev.ngrok.*;
-
-import android.support.v7.widget.Toolbar;
+import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.net.Uri;
+import android.os.Bundle;
+import android.view.View;
+import android.view.View.OnClickListener;
+import android.widget.Button;
+import android.widget.TextView;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+import net.newlydev.ngrok.R;
 
 public class AboutActivity extends AppCompatActivity
 {

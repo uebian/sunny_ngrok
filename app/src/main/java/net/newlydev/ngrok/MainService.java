@@ -37,7 +37,6 @@ public class MainService extends Service
 	{
 		// TODO: Implement this method
 		super.onDestroy();
-		((NotificationManager)getSystemService(Context.NOTIFICATION_SERVICE)).cancel(0);
 		new Thread()
 		{
 			@Override
@@ -55,8 +54,8 @@ public class MainService extends Service
 	@Override
 	public int onStartCommand(Intent intent, int flags, int startId)
 	{
-		((NotificationManager)getSystemService(Context.NOTIFICATION_SERVICE)).notify(0, builder.build());
-
+		//((NotificationManager)getSystemService(Context.NOTIFICATION_SERVICE)).notify(0, builder.build());
+		startForeground(1,builder.build());
 		ArrayList<String> authdatastr=intent.getExtras().getStringArrayList("authdata");
 		for (int i=0;i < authdatastr.size();i++)
 		{

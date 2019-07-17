@@ -6,7 +6,7 @@ import java.nio.*;
 import java.util.*;
 import javax.net.ssl.*;
 import net.newlydev.ngrok.ngrok_core.*;
-import org.apache.commons.codec.binary.*;
+//import org.apache.commons.codec.binary.*;
 import org.json.*;
 import java.security.cert.*;
 import java.security.*;
