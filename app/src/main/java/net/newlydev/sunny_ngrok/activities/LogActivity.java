@@ -1,4 +1,4 @@
-package net.newlydev.ngrok.activities;
+package net.newlydev.sunny_ngrok.activities;
 import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -13,8 +13,8 @@ import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdSize;
 import com.google.android.gms.ads.AdView;
 import java.util.ArrayList;
-import net.newlydev.ngrok.LogManager;
-import net.newlydev.ngrok.R;
+import net.newlydev.sunny_ngrok.LogManager;
+import net.newlydev.sunny_ngrok.R;
 
 public class LogActivity extends AppCompatActivity
 {

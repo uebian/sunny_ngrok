@@ -1,4 +1,4 @@
-package net.newlydev.ngrok.ngrok_core;
+package net.newlydev.sunny_ngrok.ngrok_core;
 import org.json.*;
 import javax.net.ssl.*;
 

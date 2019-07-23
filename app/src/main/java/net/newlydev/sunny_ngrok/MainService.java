@@ -1,11 +1,11 @@
-package net.newlydev.ngrok;
+package net.newlydev.sunny_ngrok;
 import android.app.*;
 import android.content.*;
 import android.os.*;
 import java.util.*;
 import org.json.*;
-import net.newlydev.ngrok.ngrok_core.*;
-import net.newlydev.ngrok.activities.*;
+import net.newlydev.sunny_ngrok.ngrok_core.*;
+import net.newlydev.sunny_ngrok.activities.*;
 import android.app.Notification.*;
 
 public class MainService extends Service

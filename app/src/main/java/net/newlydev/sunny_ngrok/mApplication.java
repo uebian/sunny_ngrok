@@ -1,4 +1,4 @@
-package net.newlydev.ngrok;
+package net.newlydev.sunny_ngrok;
 import android.app.Application;
 import androidx.preference.PreferenceManager;
 import com.google.android.gms.ads.MobileAds;

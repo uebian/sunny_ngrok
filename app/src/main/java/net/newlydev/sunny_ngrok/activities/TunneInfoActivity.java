@@ -1,4 +1,4 @@
-package net.newlydev.ngrok.activities;
+package net.newlydev.sunny_ngrok.activities;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.graphics.Color;
@@ -13,8 +13,8 @@ import androidx.preference.PreferenceManager;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdSize;
 import com.google.android.gms.ads.AdView;
-import net.newlydev.ngrok.R;
-import net.newlydev.ngrok.ngrok_core.Tunnel;
+import net.newlydev.sunny_ngrok.R;
+import net.newlydev.sunny_ngrok.ngrok_core.Tunnel;
 import androidx.appcompat.widget.Toolbar;
 
 public class TunneInfoActivity extends AppCompatActivity

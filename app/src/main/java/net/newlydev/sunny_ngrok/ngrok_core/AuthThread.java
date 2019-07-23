@@ -1,4 +1,4 @@
-package net.newlydev.ngrok.ngrok_core;
+package net.newlydev.sunny_ngrok.ngrok_core;
 
 import android.os.*;
 import android.util.*;
@@ -7,7 +7,7 @@ import java.net.*;
 import java.security.cert.*;
 import java.util.*;
 import javax.net.ssl.*;
-import net.newlydev.ngrok.*;
+import net.newlydev.sunny_ngrok.*;
 import org.json.*;
 
 public class AuthThread extends Thread

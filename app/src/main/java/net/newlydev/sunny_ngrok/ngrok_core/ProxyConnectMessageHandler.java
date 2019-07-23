@@ -1,11 +1,11 @@
-package net.newlydev.ngrok.ngrok_core;
+package net.newlydev.sunny_ngrok.ngrok_core;
 
 import java.io.*;
 import java.net.*;
 import java.security.*;
 import java.security.cert.*;
 import javax.net.ssl.*;
-import net.newlydev.ngrok.*;
+import net.newlydev.sunny_ngrok.*;
 import org.json.*;
 
 public class ProxyConnectMessageHandler extends MessageHandler

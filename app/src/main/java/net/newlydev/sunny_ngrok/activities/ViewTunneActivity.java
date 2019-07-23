@@ -1,4 +1,4 @@
-package net.newlydev.ngrok.activities;
+package net.newlydev.sunny_ngrok.activities;
 
 import android.content.ComponentName;
 import android.content.Context;
@@ -24,11 +24,11 @@ import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdSize;
 import com.google.android.gms.ads.AdView;
 import java.util.ArrayList;
-import net.newlydev.ngrok.LogManager;
-import net.newlydev.ngrok.MainService;
-import net.newlydev.ngrok.R;
-import net.newlydev.ngrok.Utils;
-import net.newlydev.ngrok.ngrok_core.Tunnel;
+import net.newlydev.sunny_ngrok.LogManager;
+import net.newlydev.sunny_ngrok.MainService;
+import net.newlydev.sunny_ngrok.R;
+import net.newlydev.sunny_ngrok.Utils;
+import net.newlydev.sunny_ngrok.ngrok_core.Tunnel;
 import org.json.JSONArray;
 import org.json.JSONObject;
 

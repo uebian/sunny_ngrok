@@ -1,6 +1,7 @@
-package net.newlydev.ngrok;
+package net.newlydev.sunny_ngrok;
 import android.os.Bundle;
 import androidx.preference.PreferenceFragmentCompat;
+import net.newlydev.sunny_ngrok.R;
 
 public class mSettingFragment extends PreferenceFragmentCompat
 {

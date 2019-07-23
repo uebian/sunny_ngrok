@@ -1,8 +1,8 @@
-package net.newlydev.ngrok.activities;
+package net.newlydev.sunny_ngrok.activities;
 import android.os.Bundle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
-import net.newlydev.ngrok.R;
+import net.newlydev.sunny_ngrok.R;
 
 public class SettingActivity extends AppCompatActivity
 {

@@ -1,4 +1,4 @@
-package net.newlydev.ngrok.activities;
+package net.newlydev.sunny_ngrok.activities;
 
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -10,7 +10,7 @@ import android.widget.Button;
 import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
-import net.newlydev.ngrok.R;
+import net.newlydev.sunny_ngrok.R;
 
 public class AboutActivity extends AppCompatActivity
 {

@@ -1,4 +1,4 @@
-package net.newlydev.ngrok.activities;
+package net.newlydev.sunny_ngrok.activities;
 
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
@@ -24,10 +24,10 @@ import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdSize;
 import com.google.android.gms.ads.AdView;
 import java.util.ArrayList;
-import net.newlydev.ngrok.MainService;
-import net.newlydev.ngrok.R;
-import net.newlydev.ngrok.Utils;
-import net.newlydev.ngrok.ngrok_core.AuthThread;
+import net.newlydev.sunny_ngrok.MainService;
+import net.newlydev.sunny_ngrok.R;
+import net.newlydev.sunny_ngrok.Utils;
+import net.newlydev.sunny_ngrok.ngrok_core.AuthThread;
 import androidx.appcompat.widget.Toolbar;
 
 public class MainActivity extends AppCompatActivity
