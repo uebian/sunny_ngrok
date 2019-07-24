@@ -4,7 +4,6 @@ import android.os.*;
 import android.util.*;
 import java.io.*;
 import java.net.*;
-import java.security.cert.*;
 import java.util.*;
 import javax.net.ssl.*;
 import net.newlydev.sunny_ngrok.*;
@@ -13,8 +12,8 @@ import org.json.*;
 public class AuthThread extends Thread
 {
 
-	ArrayList<String> clientid=new ArrayList<String>();
-	ArrayList<String> authdata=new ArrayList<String>();
+	private ArrayList<String> clientid=new ArrayList<String>();
+	private ArrayList<String> authdata=new ArrayList<String>();
 	Handler callback;
 
 	public AuthThread(ArrayList<String> clientids, Handler callback) throws Exception

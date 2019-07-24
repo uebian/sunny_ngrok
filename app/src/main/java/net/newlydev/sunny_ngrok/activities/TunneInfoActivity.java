@@ -14,6 +14,7 @@ import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdSize;
 import com.google.android.gms.ads.AdView;
 import net.newlydev.sunny_ngrok.R;
+import net.newlydev.sunny_ngrok.ngrok_core.ProxyConnectMessageHandler;
 import net.newlydev.sunny_ngrok.ngrok_core.Tunnel;
 import androidx.appcompat.widget.Toolbar;
 
@@ -21,7 +22,7 @@ public class TunneInfoActivity extends AppCompatActivity
 {
 	Button btn_start,btn_stop;
 	Tunnel tunnel;
-	TextView tv_status,tv_downloaddata,tv_uploaddata,tv_speed;
+	TextView tv_status,tv_downloaddata,tv_uploaddata,tv_speed,tv_count;
 	ProgressDialog pd;
 	@Override
 	protected void onCreate(Bundle savedInstanceState)
@@ -53,7 +54,7 @@ public class TunneInfoActivity extends AppCompatActivity
 					pd.show();
 				}
 			});
-		btn_stop = (Button) findViewById(R.id.btn_stop);
+		btn_stop = findViewById(R.id.btn_stop);
 		btn_stop.setOnClickListener(new OnClickListener(){
 
 				@Override
@@ -62,7 +63,7 @@ public class TunneInfoActivity extends AppCompatActivity
 					tunnel.close();
 				}
 			});
-		tv_status = (TextView) findViewById(R.id.tv_status);
+		tv_status = findViewById(R.id.tv_status);
 		tv_status.setOnClickListener(new OnClickListener(){
 
 				@Override
@@ -75,9 +76,23 @@ public class TunneInfoActivity extends AppCompatActivity
 					}
 				}
 			});
-		tv_downloaddata=(TextView) findViewById(R.id.tv_downloaddata);
-		tv_uploaddata=(TextView) findViewById(R.id.tv_uploaddata);
-		tv_speed=(TextView) findViewById(R.id.tv_speed);
+		tv_downloaddata=findViewById(R.id.tv_downloaddata);
+		tv_uploaddata=findViewById(R.id.tv_uploaddata);
+		tv_speed=findViewById(R.id.tv_speed);
+		tv_count=findViewById(R.id.tv_count);
+		tv_count.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View view) {
+				androidx.appcompat.app.AlertDialog.Builder ab=new androidx.appcompat.app.AlertDialog.Builder(TunneInfoActivity.this);
+				String msg="";
+				for(ProxyConnectMessageHandler pcmh:tunnel.getControlConnectMessageHandler().getConnects())
+				{
+					msg=msg+pcmh.getClientAddr()+"\n";
+				}
+				ab.setMessage(msg);
+				ab.show();
+			}
+		});
 		tunnel = ViewTunneActivity.service.tunns.get((int)getIntent().getExtras().get("tuncount"));
 		setTitle("隧道详细:" + tunnel.getLocalIP() + ":" + tunnel.getLocalPort());
 		ViewTunneActivity.setTunneInfoActivity(this);
@@ -119,6 +134,14 @@ public class TunneInfoActivity extends AppCompatActivity
 		}
 		tv_downloaddata.setText(tunnel.getDownloadData()+"B");
 		tv_uploaddata.setText(tunnel.getUploadData()+"B");
+		if(tunnel.getControlConnectMessageHandler()!=null)
+		{
+			tv_count.setText(""+tunnel.getControlConnectMessageHandler().getConnects().size());
+		}else
+		{
+			tv_count.setText("未知");
+		}
+
 	}
 	@Override
 	protected void onDestroy()

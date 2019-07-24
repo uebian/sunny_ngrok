@@ -230,6 +230,7 @@ public class Tunnel
 	public void close()
 	{
 		LogManager.addLogs(new LogManager.Log("I", sunnyid, "隧道关闭"));
+		status = 3;
 		speed = -1;
 		if (mlt != null)
 		{
@@ -238,8 +239,6 @@ public class Tunnel
 		mlt = null;
 		socket = null;
 		System.gc();
-		//isopen = false;
-		status = 3;
 		service.notice_tunnel_update();
 	}
 

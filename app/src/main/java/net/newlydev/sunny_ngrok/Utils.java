@@ -20,12 +20,12 @@ public class Utils
 		return str;
 	}
 	public static boolean isMainServiceRunning(Context context) {
-	    ActivityManager manager = (ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE);
+	    /*ActivityManager manager = (ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE);
 	    for (ActivityManager.RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE)) {
 	        if ("net.newlydev.ngrok.MainService".equals(service.service.getClassName())) {
 	            return true;
 	        }
-	    }
-	    return false;
+	    }*/
+	    return MainService.checkIsServiceRunning();
 	}
 }

@@ -12,6 +12,7 @@ public class MainService extends Service
 {
 	public ArrayList<Tunnel> tunns=new ArrayList<Tunnel>();
 	private ViewTunneActivity.updateListener listener;
+	private static boolean isServiceRunning=false;
 
 	private Notification.Builder builder;
 	public void setUpdateListener(ViewTunneActivity.updateListener listener)
@@ -34,6 +35,7 @@ public class MainService extends Service
 	public void onDestroy()
 	{
 		super.onDestroy();
+		isServiceRunning=false;
 		new Thread()
 		{
 			@Override
@@ -52,7 +54,8 @@ public class MainService extends Service
 	public int onStartCommand(Intent intent, int flags, int startId)
 	{
 		//((NotificationManager)getSystemService(Context.NOTIFICATION_SERVICE)).notify(0, builder.build());
-		startForeground(1,builder.build());
+		//startForeground(1,builder.build());
+		isServiceRunning=true;
 		ArrayList<String> authdatastr=intent.getExtras().getStringArrayList("authdata");
 		for (int i=0;i < authdatastr.size();i++)
 		{
@@ -70,7 +73,6 @@ public class MainService extends Service
 			{}
 		}
 		new Handler().postDelayed(new Runnable(){
-
 				@Override
 				public void run()
 				{
@@ -87,6 +89,10 @@ public class MainService extends Service
 		{
 			listener.onUpdate();
 		}
+	}
+	public static boolean checkIsServiceRunning()
+	{
+		return isServiceRunning;
 	}
 	@Override
 	public IBinder onBind(Intent p1)

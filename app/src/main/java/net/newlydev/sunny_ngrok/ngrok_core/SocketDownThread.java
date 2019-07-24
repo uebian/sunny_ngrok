@@ -10,10 +10,9 @@ import javax.net.ssl.*;
 public class SocketDownThread extends Thread
 {
     //Logger log = LoggerFactory.getLogger(HealthCheckWorker.class);
-
     private InputStream in;
-	Socket inputSocket;
-	Socket outputSocket;
+	private Socket inputSocket;
+	private Socket outputSocket;
     private OutputStream out;
 	Tunnel tunnel;
 	ProxyConnectMessageHandler pcmh;
@@ -30,40 +29,35 @@ public class SocketDownThread extends Thread
     public void run()
 	{
         // 线程运行函数,循环读取返回数据,并发送给相关客户端
-		byte[] buf = new byte[1024];
+		byte[] buf = new byte[4096];
 		while (true)
 		{
 			try
 			{
 				int len = in.read(buf);
-				//if (log.isTraceEnabled())
-				//    log.tracef("%s read %s bytes", name, len);
 				if (len > 0)
 				{
 					out.write(buf, 0, len);
 					tunnel.putDownloadData(len);
-					//count += len;
 					out.flush();
 				}
-				else if (len < 0)
+				else
 				{
-					//log.debug("break at len="+len);
 					break;
 				}
 			}
 			catch (IOException e)
 			{
-				//log.debug("break at IOException");
 				break;
 			}
 		}
-		try
-		{
+		try {
 			inputSocket.shutdownInput();
+		}catch (IOException e)
+		{
+			e.printStackTrace();
 		}
-		catch (IOException e)
-		{}
-		pcmh.stop();
+		pcmh.stopInput();
     }
 }
 

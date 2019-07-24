@@ -12,11 +12,13 @@ public class ProxyConnectMessageHandler extends MessageHandler
 {
 	Tunnel tunnel;
 	String localIP;
-	public SSLSocket socket;
 	int localPort;
+	String clientAddr;
 	boolean isstop=false;
 	String clientid;
 	public Socket locals;
+	public SSLSocket socket;
+	boolean inputStopped=false,outoutStopped=false;
 	@Override
 	public SSLSocket getSocket()
 	{
@@ -30,10 +32,14 @@ public class ProxyConnectMessageHandler extends MessageHandler
 	}
 
 
+	public String getClientAddr(){
+		return clientAddr;
+	}
+
 	@Override
 	public void handleMessage(JSONObject json)
 	{
-		String type=null;
+		String type=null;//{"Type":"StartProxy","Payload":{"Url":"tcp:\/\/free.idcfengye.com:10363","ClientAddr":"27.21.120.18:50984"}}
 		//JSONObject payload=null;
         try
 		{
@@ -49,10 +55,15 @@ public class ProxyConnectMessageHandler extends MessageHandler
 			case "StartProxy": 
 				LogManager.addLogs(new LogManager.Log("V", tunnel.getSunnyid(), "收到StartProxy消息"));
 				//String url = payload.getString("Url");
+				try {
+					clientAddr = json.getJSONObject("Payload").getString("ClientAddr");
+				}catch(JSONException e)
+				{
+					e.printStackTrace();
+				}
 				try
 				{
 					locals = new Socket(localIP, localPort);
-					//Thread.sleep(10);
 					new SocketDownThread(this, socket, locals, tunnel).start();
 					new SocketUpThread(this, locals, socket, tunnel).start();
 				}
@@ -65,7 +76,6 @@ public class ProxyConnectMessageHandler extends MessageHandler
 					}
 					catch (Exception err)
 					{
-
 					}
 				}
 				LogManager.addLogs(new LogManager.Log("V", tunnel.getSunnyid(), "停止代理"));
@@ -75,13 +85,36 @@ public class ProxyConnectMessageHandler extends MessageHandler
 	}
 
 
-	public void stop()
+	public void stopInput()
 	{
-		if (!isstop)
+		inputStopped=true;
+		if (outoutStopped && !isstop)
 		{
 			isstop = true;
 			LogManager.addLogs(new LogManager.Log("V", tunnel.getSunnyid(), "代理连接关闭"));
 			tunnel.getControlConnectMessageHandler().removeProxyConnect(this);
+			try {
+				socket.close();
+			}catch(IOException e)
+			{
+				e.printStackTrace();
+			}
+		}
+	}
+	public void stopOutput()
+	{
+		outoutStopped=true;
+		if (inputStopped && !isstop)
+		{
+			isstop = true;
+			LogManager.addLogs(new LogManager.Log("V", tunnel.getSunnyid(), "代理连接关闭"));
+			tunnel.getControlConnectMessageHandler().removeProxyConnect(this);
+			try {
+				socket.close();
+			}catch(IOException e)
+			{
+				e.printStackTrace();
+			}
 		}
 	}
 	public ProxyConnectMessageHandler(Tunnel tunnel, String clientid, String serverAddress, int serverPort,  String localIP, int localPort) throws NoSuchAlgorithmException, KeyManagementException, IOException
@@ -127,8 +160,6 @@ public class ProxyConnectMessageHandler extends MessageHandler
 		}
 		catch (JSONException e)
 		{}
-
-		//Function.sendMessage(socket, "{\"Type\":\"RegProxy\",\"Payload\":{\"ClientId\":\"" + clientid + "\"}}");
 		Function.sendMessage(socket, data.toString());
 	}
 }

@@ -13,7 +13,7 @@ public class SocketUpThread extends Thread
 
     private InputStream in;
 	Socket inputSocket;
-	Socket outputSocket;
+	SSLSocket outputSocket;
     private OutputStream out;
 	Tunnel  tunnel;
 	ProxyConnectMessageHandler pcmh;
@@ -32,7 +32,7 @@ public class SocketUpThread extends Thread
 	{
         // 线程运行函数,循环读取返回数据,并发送给相关客户端
 
-		byte[] buf = new byte[1024];
+		byte[] buf = new byte[2048];
 		while (true)
 		{
 			try
@@ -47,7 +47,7 @@ public class SocketUpThread extends Thread
 					//count += len;
 					out.flush();
 				}
-				else if (len < 0)
+				else
 				{
 					//log.debug("break at len="+len);
 					break;
@@ -55,17 +55,18 @@ public class SocketUpThread extends Thread
 			}
 			catch (IOException e)
 			{
+				e.printStackTrace();
 				//log.debug("break at IOException");
 				break;
 			}
 		}
-		try
-		{
+		try {
 			outputSocket.shutdownOutput();
+		}catch (IOException e)
+		{
+			e.printStackTrace();
 		}
-		catch (IOException e)
-		{}
-		pcmh.stop();
+		pcmh.stopOutput();
     }
 }
 

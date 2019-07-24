@@ -160,7 +160,7 @@ public class MainActivity extends AppCompatActivity
 					}
 					else
 					{
-						new AlertDialog.Builder(MainActivity.this).setTitle("发生了" + n + "个错误").setMessage(errmsg).setCancelable(false).setPositiveButton("忽略这些错误，继续", new DialogInterface.OnClickListener(){
+						new AlertDialog.Builder(MainActivity.this).setTitle(String.format("发生了%d个错误",n)).setMessage(errmsg).setCancelable(false).setPositiveButton("忽略这些错误，继续", new DialogInterface.OnClickListener(){
 
 								@Override
 								public void onClick(DialogInterface p1, int p2)
