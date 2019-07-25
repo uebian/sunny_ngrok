@@ -31,8 +31,7 @@ public class SocketUpThread extends Thread
     public void run()
 	{
         // 线程运行函数,循环读取返回数据,并发送给相关客户端
-
-		byte[] buf = new byte[2048];
+		byte[] buf = new byte[4096];
 		while (true)
 		{
 			try

@@ -8,7 +8,7 @@
 	<com.google.android.material.appbar.AppBarLayout
 		android:layout_width="match_parent"
 		android:layout_height="wrap_content"
-		style="@style/mToolBar">
+		android:style="@style/mToolBar">
 
 		<androidx.appcompat.widget.Toolbar
 			android:id="@+id/toolbar_normal"
@@ -128,7 +128,7 @@
 		<TextView
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
-			android:text="连接数:"/>
+			android:text="连接数（点击查看详情）:" />
 
 		<TextView
 			android:layout_width="wrap_content"

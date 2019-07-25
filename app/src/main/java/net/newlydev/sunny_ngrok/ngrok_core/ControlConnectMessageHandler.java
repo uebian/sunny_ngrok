@@ -1,22 +1,12 @@
 package net.newlydev.sunny_ngrok.ngrok_core;
 
 import java.io.*;
-import java.net.*;
-import java.nio.*;
 import java.util.*;
 
 import javax.net.ssl.*;
 
-import net.newlydev.sunny_ngrok.ngrok_core.*;
 //import org.apache.commons.codec.binary.*;
 import org.json.*;
-
-import java.security.cert.*;
-import java.security.*;
-
-import android.os.health.*;
-
-import java.security.acl.*;
 
 import net.newlydev.sunny_ngrok.*;
 
@@ -31,7 +21,8 @@ public class ControlConnectMessageHandler extends MessageHandler {
     private int localPort;
     private String localIP;
     private SSLSocket socket;
-    private ArrayList<ProxyConnectMessageHandler> proxyconnectlist = new ArrayList<ProxyConnectMessageHandler>();
+    private ArrayList<ProxyConnectMessageHandler> proxyConnectList = new ArrayList<ProxyConnectMessageHandler>();
+    private ArrayList<String> clientList=new ArrayList<String>();
     private long lastPing;
 
     public ControlConnectMessageHandler(Tunnel tunnel) {
@@ -45,17 +36,20 @@ public class ControlConnectMessageHandler extends MessageHandler {
     }
 
     public ArrayList<ProxyConnectMessageHandler> getConnects() {
-        return proxyconnectlist;
+        return proxyConnectList;
+    }
+    public ArrayList<String> getClientList()
+    {
+        return clientList;
     }
 
     public void close() {
         try {
-            for (ProxyConnectMessageHandler pcmh : proxyconnectlist) {
+            for (ProxyConnectMessageHandler pcmh : proxyConnectList) {
                 pcmh.locals.close();
                 pcmh.socket.close();
             }
         } catch (Exception e) {
-
         }
         try {
             socket.close();
@@ -79,7 +73,7 @@ public class ControlConnectMessageHandler extends MessageHandler {
     }
 
     public void removeProxyConnect(ProxyConnectMessageHandler pcmh) {
-        proxyconnectlist.remove(pcmh);
+        proxyConnectList.remove(pcmh);
     }
 
     public void handleMessage(final JSONObject json) {
@@ -118,7 +112,7 @@ public class ControlConnectMessageHandler extends MessageHandler {
                             @Override
                             public void run() {
                                 try {
-                                    Thread.sleep(3000);
+                                    Thread.sleep(5000);
                                     sendPing();
                                 } catch (Exception e) {
                                     tunnel.unlinked(e.toString());
@@ -131,7 +125,7 @@ public class ControlConnectMessageHandler extends MessageHandler {
                         //注册代理需要新的线程和连接
                         try {
                             ProxyConnectMessageHandler messagehandler = new ProxyConnectMessageHandler(tunnel, clientid, serverAddress, serverPort, localIP, localPort);
-                            proxyconnectlist.add(messagehandler);
+                            proxyConnectList.add(messagehandler);
                             new MessageListeningThread(messagehandler, messagehandler.getSocket()).start();
                         } catch (Exception e) {
                             e.printStackTrace();

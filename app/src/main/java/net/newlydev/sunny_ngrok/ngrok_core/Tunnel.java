@@ -18,8 +18,6 @@ public class Tunnel
     private String httpAuth;
 	private String serverAddress;
 	private int serverPort;
-	//private boolean isopen=false;
-	//private String status="err:等待中...";
 	private int status=3;//0 ok,1 linking,2 err,3 close
 	String errmsg;
 	String remoteURL;
@@ -182,10 +180,7 @@ public class Tunnel
 	{
 		return errmsg;
 	}
-	private void realunlinked(String reason)
-	{
 
-	}
 	public void unlinked(String reason)
 	{
 		speed = -1;
