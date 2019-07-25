@@ -93,9 +93,9 @@ public class TunneInfoActivity extends AppCompatActivity
 				ab.show();
 			}
 		});
-		tunnel = ViewTunneActivity.service.tunns.get((int)getIntent().getExtras().get("tuncount"));
+		tunnel = MainActivity.service.tunns.get((int)getIntent().getExtras().get("tuncount"));
 		setTitle("隧道详细:" + tunnel.getLocalIP() + ":" + tunnel.getLocalPort());
-		ViewTunneActivity.setTunneInfoActivity(this);
+		MainActivity.setTunneInfoActivity(this);
 		update();
 	}
 	public void update()
@@ -147,7 +147,7 @@ public class TunneInfoActivity extends AppCompatActivity
 	protected void onDestroy()
 	{
 		super.onDestroy();
-		ViewTunneActivity.setTunneInfoActivity(null);
+		MainActivity.setTunneInfoActivity(null);
 	}
 
 }

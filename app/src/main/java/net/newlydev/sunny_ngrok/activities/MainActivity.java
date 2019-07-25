@@ -1,246 +1,209 @@
 package net.newlydev.sunny_ngrok.activities;
 
-import android.app.AlertDialog;
-import android.app.ProgressDialog;
+import android.content.ComponentName;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.ServiceConnection;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Message;
+import android.os.IBinder;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
-import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.Toast;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import androidx.preference.PreferenceManager;
+
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdSize;
 import com.google.android.gms.ads.AdView;
 import java.util.ArrayList;
+import net.newlydev.sunny_ngrok.LogManager;
 import net.newlydev.sunny_ngrok.MainService;
 import net.newlydev.sunny_ngrok.R;
 import net.newlydev.sunny_ngrok.Utils;
-import net.newlydev.sunny_ngrok.ngrok_core.AuthThread;
-import androidx.appcompat.widget.Toolbar;
+import net.newlydev.sunny_ngrok.ngrok_core.Tunnel;
+import org.json.JSONArray;
+import org.json.JSONObject;
 
 public class MainActivity extends AppCompatActivity
 {
-	private EditText et_clientid;
-	private Button btn_start;
-	private Handler callback;
-	private ArrayAdapter adapter;
-	private Button btn_add;
-	private ArrayList<String> clientidlist=new ArrayList<String>();
-	private ListView lv_addtunne;
-    @Override
-    protected void onCreate(Bundle savedInstanceState)
-    {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+	JSONArray data;
+	JSONObject info;
+	public static MainService service;
+	ListView lv;
+	MyConnection conn;
+	public static TunneInfoActivity tunneInfoActivity;
+	public static void setTunneInfoActivity(TunneInfoActivity tunneInfoActivity)
+	{
+		MainActivity.tunneInfoActivity = tunneInfoActivity;
+	}
+	ArrayList<String> tunns=new ArrayList<String>();
+	ArrayAdapter<String> adapter;
+	@Override
+	protected void onCreate(Bundle savedInstanceState)
+	{
+		super.onCreate(savedInstanceState);
+		setContentView(R.layout.activity_viewtunne);
 		final AdView adview=new AdView(this);
 		((LinearLayout)findViewById(R.id.adLayout)).addView(adview);
-		adview.setAdUnitId("ca-app-pub-4267459436057308/7200868216");
-		if(PreferenceManager.getDefaultSharedPreferences(this).getBoolean("notusesmartad",false))
+		adview.setAdUnitId("ca-app-pub-4267459436057308/1519374118");
+		if (PreferenceManager.getDefaultSharedPreferences(this).getBoolean("notusesmartad", false))
 		{
 			adview.setAdSize(AdSize.BANNER);
-		}else{
+		}
+		else
+		{
 			adview.setAdSize(AdSize.SMART_BANNER);
 		}
-		//AdRequest adRequest = new AdRequest.Builder().addTestDevice("27E31343F422BD0D601A6F9D3D438A95").build();
 		AdRequest adRequest=new AdRequest.Builder().build();
         adview.loadAd(adRequest);
 		setSupportActionBar((Toolbar)findViewById(R.id.toolbar_normal));
-		if(Utils.isMainServiceRunning(this))
+		if (!Utils.isMainServiceRunning(this))
 		{
+			startActivity(new Intent(this, LoginActivity.class));
 			finish();
-			startActivity(new Intent(this,ViewTunneActivity.class));
 		}
-		et_clientid = (EditText) findViewById(R.id.et_clientid);
-		btn_start = (Button) findViewById(R.id.btn_start);
-		btn_start.setEnabled(false);
-		lv_addtunne = (ListView) findViewById(R.id.lv_addtunne);
-		adapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, clientidlist);  
-		adapter.setDropDownViewResource(android.R.layout.simple_list_item_1);  
-		lv_addtunne.setAdapter(adapter);
-		btn_add = (Button) findViewById(R.id.btn_add);
-		btn_add.setOnClickListener(new OnClickListener(){
+		else
+		{
+			conn = new MyConnection();
+			lv = (ListView) findViewById(R.id.lv_checktunne);
+			adapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, tunns);  
+			adapter.setDropDownViewResource(android.R.layout.simple_list_item_1);  
+			lv.setAdapter(adapter);
+			lv.setOnItemClickListener(new OnItemClickListener(){
+					@Override
+					public void onItemClick(AdapterView<?> p1, View p2, int p3, long p4)
+					{
+						Intent i=new Intent(MainActivity.this, TunneInfoActivity.class);
+						i.putExtra("tuncount", p3);
+						startActivity(i);
+					}
+				});
+			bindService(new Intent(this, MainService.class), conn, Context.BIND_AUTO_CREATE);
+		}
+		//Toast.makeText(this,data.toString(),Toast.LENGTH_LONG);
+	}
+	private class MyConnection implements ServiceConnection
+	{
 
-				@Override
-				public void onClick(View p1)
-				{
-					boolean okfalg=true;
-					String clientid=et_clientid.getText().toString();
-					if(clientid.equals(""))
-					{
-						okfalg=false;
-					}
-					for (char a:clientid.toCharArray())
-					{
-						if (!((a >= '0' && a <= '9') || (a >= 'a' && a <= 'f')))
-						{
-							okfalg = false;
-							new AlertDialog.Builder(MainActivity.this).setTitle("错误").setMessage("不能识别您的输入").setPositiveButton("确定", null).show();
-							break;
-						}
-					}
-					for(String yclientid:clientidlist)
-					{
-						if(yclientid.equals(clientid))
-						{
-							okfalg=false;
-							new AlertDialog.Builder(MainActivity.this).setTitle("错误").setMessage("重复添加的项目").setPositiveButton("确定", null).show();
-							break;
-						}
-					}
-					if (okfalg)
-					{
-						et_clientid.setText("");
-						clientidlist.add(clientid);
-						adapter.notifyDataSetChanged();
-						if(clientidlist.size()!=0)
-						{
-							btn_start.setEnabled(true);
-						}else{
-							btn_start.setEnabled(false);
-						}
-					}
-				}
-			});
-		final ProgressDialog pd=new ProgressDialog(this);
-		lv_addtunne.setOnItemClickListener(new OnItemClickListener(){
+		@Override
+		public void onServiceConnected(ComponentName name, IBinder binder)
+		{
 
-				@Override
-				public void onItemClick(AdapterView<?> p1, View p2, int p3, long p4)
-				{
-					clientidlist.remove(p3);
-					adapter.notifyDataSetChanged();
-					if(clientidlist.size()!=0)
-					{
-						btn_start.setEnabled(true);
-					}else{
-						btn_start.setEnabled(false);
-					}
-				}
-				
-			});
-		pd.setCancelable(false);
-		callback = new Handler(){
-			@Override
-			public void handleMessage(Message msg)
-			{
-				String errmsg="";
-				int type=msg.getData().getInt("type");
-				if (type == 0)
-				{
-					int n=0;
-					pd.dismiss();
-					final ArrayList<String> data=msg.getData().getStringArrayList("data");
-					for (int i=0;i < data.size();i++)
-					{
-						if (data.get(i).startsWith("err:"))
-						{
-							errmsg = errmsg + "==========\n隧道" + clientidlist.get(i) + "没有通过验证\n错误信息:" + data.get(i).substring(4) + "\n\n";
-							n++;
-						}
-					}if (errmsg.equals(""))
-					{
-						//final JSONObject authData=new JSONObject(msg.getData().getString("data"));
-						Intent i=new Intent(MainActivity.this, MainService.class);
-						i.putExtra("authdata", data);
-						startService(i);
-						finish();
-						startActivity(new Intent(MainActivity.this, ViewTunneActivity.class));
-					}
-					else
-					{
-						new AlertDialog.Builder(MainActivity.this).setTitle(String.format("发生了%d个错误",n)).setMessage(errmsg).setCancelable(false).setPositiveButton("忽略这些错误，继续", new DialogInterface.OnClickListener(){
-
-								@Override
-								public void onClick(DialogInterface p1, int p2)
-								{
-									ArrayList<String> okdata=new ArrayList<String>();
-									for(String tmp:data)
-									{
-										if(!tmp.startsWith("err:"))
-										{
-											okdata.add(tmp);
-										}
-									}
-									if(okdata.size()==0)
-									{
-										new AlertDialog.Builder(MainActivity.this).setTitle("错误").setMessage("没有通过验证的隧道").setPositiveButton("确定",null).show();
-									}else{
-										Intent i=new Intent(MainActivity.this, MainService.class);
-										i.putExtra("authdata", okdata);
-										startService(i);
-										finish();
-										startActivity(new Intent(MainActivity.this, ViewTunneActivity.class));
-									}
-								}
-							}).setNegativeButton("重新输入", null).show();
-					}
-				}
-				else if (type == 1)
-				{
-					pd.setMessage("正在核对信息...(第" + msg.getData().getInt("progress") + "条，共" + clientidlist.size() + "条");
-				}
-			}
-		};
-		btn_start.setOnClickListener(new OnClickListener(){
-
-				@Override
-				public void onClick(View p1)
-				{
-					pd.setMessage("正在核对信息...");
-					pd.show();
-					final AlertDialog.Builder errordlg=new AlertDialog.Builder(MainActivity.this);
-					errordlg.setCancelable(false);
-					errordlg.setPositiveButton("确定", null);
-					try
-					{
-						new AuthThread(clientidlist, callback).start();
-					}
-					catch (Exception e)
+			final MainService.mBinder service = (MainService.mBinder) binder;
+			MainActivity.this.service = service.service;
+			service.service.setUpdateListener(new updateListener(){
+					@Override
+					public void onUpdate()
 					{
 						runOnUiThread(new Runnable(){
-
 								@Override
 								public void run()
 								{
-									pd.dismiss();
-									errordlg.setMessage("您的输入似乎不正确，请检查后重试。");
-									errordlg.show();
+									if (tunneInfoActivity != null)
+									{
+										tunneInfoActivity.update();
+									}
+									tunns.clear();
+									for (final Tunnel tunnel:service.service.tunns)
+									{
+										switch (tunnel.getStatus())
+										{
+											case 0:
+												tunns.add(tunnel.getRemoteUrl() + "->" + tunnel.getLocalIP() + ":" + tunnel.getLocalPort());
+												break;
+											case 1:
+												tunns.add(tunnel.getLocalIP() + ":" + tunnel.getLocalPort() + "(连接中)");
+												break;
+											case 2:
+												tunns.add(tunnel.getLocalIP() + ":" + tunnel.getLocalPort() + "(错误，准备重连)");
+												break;
+											case 3:
+												tunns.add(tunnel.getLocalIP() + ":" + tunnel.getLocalPort() + "(已关闭)");
+												break;
+										}
+									}
+									adapter.notifyDataSetChanged();
 								}
 							});
-					}}
-			});
+					}
+				});
+			service.service.notice_tunnel_update();
+		}
 
-    }
+		@Override
+		public void onServiceDisconnected(ComponentName name)
+		{
+
+		}
+	}
+
+	@Override
+	public void onDestroy()
+	{
+		super.onDestroy();
+		if (Utils.isMainServiceRunning(this))
+		{
+			unbindService(conn);
+		}
+	}
+
+	public static interface updateListener
+	{
+		void onUpdate();
+	}
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu)
 	{
+		menu.add("日志");
 		menu.add("设置");
 		menu.add("关于");
+		menu.add("终止客户端");
 		return super.onCreateOptionsMenu(menu);
 	}
+
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item)
 	{
 		switch (item.getTitle().toString())
 		{
+			case "日志":
+				if (LogManager.getisopenlog())
+				{
+					startActivity(new Intent(this, LogActivity.class));
+				}
+				else
+				{
+					Toast.makeText(this, "日志功能未开启，请在设置中打开日志功能并重启应用(终止客户端后再开)", Toast.LENGTH_SHORT).show();
+				}
+				break;
 			case "设置":
 				startActivity(new Intent(this, SettingActivity.class));
 				break;
 			case "关于":
 				startActivity(new Intent(this, AboutActivity.class));
+				break;
+			case "终止客户端":
+				new AlertDialog.Builder(this).setTitle("警告").setMessage("这将会关闭所有的ngrok隧道，您确定继续吗？").setCancelable(false).setPositiveButton("确定", new DialogInterface.OnClickListener(){
+
+						@Override
+						public void onClick(DialogInterface p1, int p2)
+						{
+							unbindService(conn);
+							stopService(new Intent(MainActivity.this, MainService.class));
+							finish();
+						}
+					}).setNegativeButton("取消", null).show();
+
 				break;
 		}
 		return super.onOptionsItemSelected(item);

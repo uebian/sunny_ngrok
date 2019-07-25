@@ -6,16 +6,15 @@ import java.util.*;
 import org.json.*;
 import net.newlydev.sunny_ngrok.ngrok_core.*;
 import net.newlydev.sunny_ngrok.activities.*;
-import android.app.Notification.*;
 
 public class MainService extends Service
 {
 	public ArrayList<Tunnel> tunns=new ArrayList<Tunnel>();
-	private ViewTunneActivity.updateListener listener;
+	private MainActivity.updateListener listener;
 	private static boolean isServiceRunning=false;
 
 	private Notification.Builder builder;
-	public void setUpdateListener(ViewTunneActivity.updateListener listener)
+	public void setUpdateListener(MainActivity.updateListener listener)
 	{
 		this.listener = listener;
 	}
@@ -28,7 +27,7 @@ public class MainService extends Service
 		builder.setContentText("点击管理");
 		builder.setSmallIcon(R.drawable.ic_launcher);
 		builder.setOngoing(true);
-		builder.setContentIntent(PendingIntent.getActivity(this, 0, new Intent(this, ViewTunneActivity.class), 0));
+		builder.setContentIntent(PendingIntent.getActivity(this, 0, new Intent(this, MainActivity.class), 0));
 	}
 
 	@Override
