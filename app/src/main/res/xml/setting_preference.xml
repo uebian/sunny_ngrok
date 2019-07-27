@@ -18,9 +18,19 @@
             android:title="不使用智能大小的广告"
 			android:summary="智能大小的广告会根据您的屏幕分辨率进行智能调整，但有时会过大或过小使您感到不适。启用此选项后我们将会固定广告大小，您可能需要在重启某些页面后才能应用此设置"
             android:defaultValue="false"/>
-		<!--<android.support.v7.preference.Preference
-            android:key="howtoclosead"
-            android:title="如何关闭广告"
-            android:defaultValue="false"/>-->
 	</androidx.preference.PreferenceCategory>
+	<androidx.preference.PreferenceCategory
+		android:title="高级">
+		<androidx.preference.EditTextPreference
+			android:key="bufSize"
+			android:title="块大小"
+			android:summary="ngrok转发所用的块大小"
+			android:defaultValue="2048"/>
+		<androidx.preference.EditTextPreference
+			android:key="timeOut"
+			android:title="超时时间（0为无穷大）"
+			android:summary="超过超时时间时按照available读到的发送，否则等待块大小发送。请按照使用的服务合理决定这项设置。"
+			android:defaultValue="0"/>
+	</androidx.preference.PreferenceCategory>
+
 </androidx.preference.PreferenceScreen>

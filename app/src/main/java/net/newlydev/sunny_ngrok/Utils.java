@@ -3,11 +3,27 @@ package net.newlydev.sunny_ngrok;
 import android.app.*;
 import android.content.*;
 
+import androidx.preference.PreferenceManager;
+
 import java.math.BigDecimal;
 import java.util.regex.*;
 
 public class Utils
 {
+	private static int bufSize,timeOut;
+	public static void init(Context ctx)
+	{
+		bufSize=Integer.parseInt(PreferenceManager.getDefaultSharedPreferences(ctx).getString("bufSize","2048"));
+		timeOut=Integer.parseInt(PreferenceManager.getDefaultSharedPreferences(ctx).getString("timeOut","0"));
+	}
+	public static int getBufSize()
+	{
+		return bufSize;
+	}
+	public static int getTimeOut()
+	{
+		return timeOut;
+	}
 	public static String unicodeToString(String str) {
 
 		Pattern pattern = Pattern.compile("(\\\\u(\\p{XDigit}{4}))");

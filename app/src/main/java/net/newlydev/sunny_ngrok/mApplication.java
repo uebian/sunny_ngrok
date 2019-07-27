@@ -15,6 +15,7 @@ public class mApplication extends Application
 		{
 			LogManager.openlog();
 		}
+		Utils.init(getApplicationContext());
 	}
 	
 }

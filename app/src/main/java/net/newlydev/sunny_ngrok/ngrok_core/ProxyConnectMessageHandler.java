@@ -52,12 +52,24 @@ public class ProxyConnectMessageHandler extends MessageHandler {
                 LogManager.addLogs(new LogManager.Log("V", tunnel.getSunnyid(), "收到StartProxy消息"));
                 try {
                     clientAddr = json.getJSONObject("Payload").getString("ClientAddr");
-                    tunnel.getControlConnectMessageHandler().getClientList().add(clientAddr);
                     islistening = false;
-                    locals = new Socket(localIP, localPort);
-                    new SocketDownThread(this, socket, locals, tunnel).start();
-                    new SocketUpThread(this, locals, socket, tunnel).start();
-                } catch (Exception e) {
+                    new Thread(){
+                        @Override
+                        public void run() {
+                            try {
+                                locals = new Socket(localIP, localPort);
+                                locals.setSoTimeout(Utils.getTimeOut());
+                                socket.setSoTimeout(Utils.getTimeOut());
+                                new SocketSwapThread(ProxyConnectMessageHandler.this, socket, locals, tunnel,false).start();
+                                new SocketSwapThread(ProxyConnectMessageHandler.this, locals, socket, tunnel,true).start();
+                                tunnel.getControlConnectMessageHandler().getClientList().add(clientAddr);
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    }.start();
+
+                } catch (JSONException e) {
                     e.printStackTrace();
                     try {
                         socket.close();
@@ -92,13 +104,16 @@ public class ProxyConnectMessageHandler extends MessageHandler {
     {
         isstop = true;
         LogManager.addLogs(new LogManager.Log("V", tunnel.getSunnyid(), "代理连接关闭"));
-        tunnel.getControlConnectMessageHandler().removeProxyConnect(this);
+        if(tunnel.isOpen()) {
+            tunnel.getControlConnectMessageHandler().removeProxyConnect(this);
+        }
         try {
             socket.close();
         } catch (IOException e) {
             e.printStackTrace();
         }
         tunnel.getControlConnectMessageHandler().getClientList().remove(clientAddr);
+        tunnel.getService().notice_tunnel_update();
     }
     public ProxyConnectMessageHandler(Tunnel tunnel, String clientid, String serverAddress, int serverPort, String localIP, int localPort) throws NoSuchAlgorithmException, KeyManagementException, IOException {
         islistening = true;

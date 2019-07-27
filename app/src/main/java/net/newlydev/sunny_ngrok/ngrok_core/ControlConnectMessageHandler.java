@@ -56,7 +56,6 @@ public class ControlConnectMessageHandler extends MessageHandler {
         } catch (Exception e) {
             //e.printStackTrace();
         }
-        islistening = false;
     }
 
     public Tunnel getTunnel() {
