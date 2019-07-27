@@ -3,10 +3,12 @@ package net.newlydev.sunny_ngrok.activities;
 import android.app.ProgressDialog;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.os.Handler;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AlertDialog;
@@ -63,6 +65,16 @@ public class TunneInfoActivity extends AppCompatActivity {
             @Override
             public void onClick(View p1) {
                 tunnel.close();
+                final ProgressDialog pd=new ProgressDialog(TunneInfoActivity.this);
+                pd.setMessage("请稍候...");
+                pd.setCancelable(false);
+                pd.show();
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        pd.dismiss();
+                    }
+                },3500);
             }
         });
         tv_status = findViewById(R.id.tv_status);

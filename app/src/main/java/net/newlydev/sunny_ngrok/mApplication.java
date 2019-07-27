@@ -1,5 +1,9 @@
 package net.newlydev.sunny_ngrok;
 import android.app.Application;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
+import android.os.Build;
+
 import androidx.preference.PreferenceManager;
 import com.google.android.gms.ads.MobileAds;
 
@@ -16,6 +20,11 @@ public class mApplication extends Application
 			LogManager.openlog();
 		}
 		Utils.init(getApplicationContext());
+		if(Build.VERSION.SDK_INT>=Build.VERSION_CODES.O)
+		{
+			NotificationChannel notificationChannel=new NotificationChannel("0","状态", NotificationManager.IMPORTANCE_LOW);
+			((NotificationManager)getSystemService(NOTIFICATION_SERVICE)).createNotificationChannel(notificationChannel);
+		}
 	}
 	
 }

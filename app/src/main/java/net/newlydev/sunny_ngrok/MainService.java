@@ -28,8 +28,11 @@ public class MainService extends Service
 		builder.setSmallIcon(R.drawable.ic_launcher);
 		builder.setOngoing(true);
 		builder.setContentIntent(PendingIntent.getActivity(this, 0, new Intent(this, MainActivity.class), 0));
-	}
+		if(Build.VERSION.SDK_INT>=Build.VERSION_CODES.O){
+			builder.setChannelId("0");
+		}
 
+	}
 	@Override
 	public void onDestroy()
 	{
@@ -53,7 +56,7 @@ public class MainService extends Service
 	public int onStartCommand(Intent intent, int flags, int startId)
 	{
 		//((NotificationManager)getSystemService(Context.NOTIFICATION_SERVICE)).notify(0, builder.build());
-		//startForeground(1,builder.build());
+		startForeground(1,builder.build());
 		isServiceRunning=true;
 		ArrayList<String> authdatastr=intent.getExtras().getStringArrayList("authdata");
 		for (int i=0;i < authdatastr.size();i++)
